@@ -1,14 +1,14 @@
 import { Type } from 'class-transformer';
 import { Allow, IsInt, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 
-import { ServiceAccountCreatedDTO } from './service-account-created.dto';
-import { ServiceAccountDeletedDTO } from './service-account-deleted.dto';
+import { AggregatorLinkRequiredDTO } from './aggregator-link-required-payload.dto';
+import { BankDetailsRequiredDTO } from './bank-details-required-payload.dto';
 import { SubscriptionDTO } from './subscription.dto';
 
 /**
  * Events payload types
  */
-type Events = ServiceAccountCreatedDTO | ServiceAccountDeletedDTO;
+type EventPayloadDTO = AggregatorLinkRequiredDTO | BankDetailsRequiredDTO;
 
 /**
  * Event
@@ -18,7 +18,7 @@ export class EventDTO {
   @Type(() => SubscriptionDTO)
   public readonly subscription: SubscriptionDTO;
   @Allow()
-  public readonly payload: Events;
+  public readonly payload: EventPayloadDTO;
   @IsInt()
   public readonly index: number;
   @IsOptional()

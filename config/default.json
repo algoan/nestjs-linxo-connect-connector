@@ -4,9 +4,21 @@
     "clientId": "a",
     "clientSecret": "b"
   },
+  "oxlin": {
+    "authBaseUrl": "https://sandbox-auth.oxlin.io",
+    "apiBaseUrl": "https://sandbox-api.oxlin.io/v2.1",
+    "embedBaseUrl": "https://sandbox-embed.oxlin.io/v2.1",
+    "test": true
+  },
   "targetUrl": "https://test",
   "eventList": [
-    "service_account_created"
+    "aggregator_link_required",
+    "bank_details_required"
   ],
-  "restHooksSecret": "a"
+  "restHooksSecret": "a",
+  "customerIdPassword": "toto",
+  "enableHttpRequestLog": true,
+  "enableHttpResponseLog": false,
+  "enableHttpErrorLog": true,
+  "port": 3000
 }

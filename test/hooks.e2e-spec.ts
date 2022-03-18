@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/naming-convention,camelcase */
+/* eslint-disable arrow-body-style */
 import { INestApplication, HttpStatus } from '@nestjs/common';
-import * as nock from 'nock';
+import { config } from 'node-config-ts';
 import * as request from 'supertest';
+import { AggregationDetailsAggregatorName, AggregationDetailsMode } from '../src/algoan/dto/customer.enums';
 import { buildFakeApp, fakeAlgoanBaseUrl } from './utils/app';
 import { fakeAPI } from './utils/fake-server';
 
@@ -35,7 +38,7 @@ describe('HooksController (e2e)', () => {
             id: 'unknown',
             target: 'http://',
             status: 'ACTIVE',
-            eventName: 'bankreader_link_required',
+            eventName: 'aggregator_link_required',
           },
           id: 'random',
           index: 1,
@@ -48,12 +51,89 @@ describe('HooksController (e2e)', () => {
         .expect(HttpStatus.UNAUTHORIZED);
     });
 
-    it('HK004 - should be ok', async () => {
-      const fakePatchSubEvent: nock.Scope = fakeAPI({
+    fit('HK004 - should be ok', async () => {
+      fakeAPI({
         baseUrl: fakeAlgoanBaseUrl,
         method: 'patch',
         result: { status: 'PROCESSED' },
         path: '/v1/subscriptions/1/events/random',
+      });
+
+      fakeAPI({
+        baseUrl: fakeAlgoanBaseUrl,
+        method: 'post',
+        result: {
+          access_token: 'token',
+          refresh_token: 'refresh_token',
+          expires_in: 3000,
+          refresh_expires_in: 10000,
+        },
+        path: '/v1/oauth/token',
+      });
+
+      fakeAPI({
+        baseUrl: fakeAlgoanBaseUrl,
+        method: 'get',
+        result: {
+          id: 'customerId',
+          customIdentifier: 'client_unique_identifier',
+          aggregationDetails: {
+            callbackUrl: `${fakeAlgoanBaseUrl}/callback`,
+            mode: AggregationDetailsMode.iframe,
+          },
+        },
+        path: '/v2/customers/customerId',
+      });
+
+      fakeAPI({
+        baseUrl: fakeAlgoanBaseUrl,
+        method: 'patch',
+        result: {
+          id: 'customerId',
+          customIdentifier: 'client_unique_identifier',
+          aggregationDetails: {
+            callbackUrl: `${fakeAlgoanBaseUrl}/callback`,
+            userId: 'new-user-id',
+            iframeUrl: 'https://sandbox-embed.oxlin.io/widget/add_connection?session_id=xxxxxxxx',
+            mode: AggregationDetailsMode.iframe,
+            aggregatorName: AggregationDetailsAggregatorName.oxlin,
+          },
+        },
+        path: '/v2/customers/customerId',
+      });
+
+      fakeAPI({
+        baseUrl: config.oxlin.authBaseUrl,
+        method: 'post',
+        result: {
+          access_token: 'new-token',
+        },
+        path: '/token',
+        nbOfCalls: 2,
+      });
+
+      fakeAPI({
+        baseUrl: config.oxlin.apiBaseUrl,
+        method: 'post',
+        result: {},
+        responseHeaders: {
+          location: '/users/xxxxxx',
+        },
+        path: '/users',
+      });
+
+      fakeAPI({
+        baseUrl: config.oxlin.embedBaseUrl,
+        method: 'post',
+        result: {
+          session_id: 'xxxxxxx',
+          _links: {
+            add_connection: 'https://sandbox-embed.oxlin.io/widget/add_connection?session_id=xxxxxxx',
+            professional_account: 'https://sandbox-embed.oxlin.io/widget/professional-account?session_id=xxxxxxx',
+            terms: 'https://sandbox-embed.oxlin.io/widget/terms?session_id=xxxxxxx',
+          },
+        },
+        path: '/widget/widget_session',
       });
 
       await request(app.getHttpServer())
@@ -63,21 +143,20 @@ describe('HooksController (e2e)', () => {
             id: '1',
             target: 'http://',
             status: 'ACTIVE',
-            eventName: 'example',
+            eventName: 'aggregator_link_required',
           },
           id: 'random',
           index: 1,
           time: Date.now(),
           payload: {
-            banksUserId: 'banks_user_id',
-            applicationId: 'app_id',
+            customerId: 'customerId',
           },
         })
         .expect(HttpStatus.NO_CONTENT);
     });
 
     it('HK005 - should be failed - event not handled', async () => {
-      const fakePatchSubEvent: nock.Scope = fakeAPI({
+      fakeAPI({
         baseUrl: fakeAlgoanBaseUrl,
         method: 'patch',
         result: { status: 'FAILED' },

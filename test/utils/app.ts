@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention, camelcase */
 import * as assert from 'assert';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { TestingModule, Test } from '@nestjs/testing';
@@ -31,7 +32,7 @@ export const buildFakeApp = async (): Promise<INestApplication> => {
       expires_in: 3000,
       refresh_expires_in: 10000,
     },
-    path: '/v2/oauth/token',
+    path: '/v1/oauth/token',
     nbOfCalls: 2,
   });
   const fakeServiceAccounts: nock.Scope = fakeAPI({
@@ -42,6 +43,11 @@ export const buildFakeApp = async (): Promise<INestApplication> => {
         clientId: 'client1',
         clientSecret: 'secret',
         id: 'id1',
+        config: {
+          clientId: 'oxlinclientId',
+          clientSecret: 'oxlinClientSecret',
+          connectionUrl: 'http://localhost:4000',
+        },
       },
     ],
     path: '/v1/service-accounts',
@@ -54,10 +60,17 @@ export const buildFakeApp = async (): Promise<INestApplication> => {
       eventName: { $in: config.eventList },
     })}`,
   });
-  const fakePostSubscriptions: nock.Scope = fakeAPI({
+  const fakePostSubscriptions1: nock.Scope = fakeAPI({
     baseUrl: fakeAlgoanBaseUrl,
     method: 'post',
-    result: { id: '1', eventName: 'bankreader_link_required', target: 'http://...' },
+    result: { id: '1', eventName: 'aggregator_link_required', target: 'http://...' },
+    path: '/v1/subscriptions',
+  });
+
+  const fakePostSubscriptions2: nock.Scope = fakeAPI({
+    baseUrl: fakeAlgoanBaseUrl,
+    method: 'post',
+    result: { id: '1', eventName: 'bank_details_required', target: 'http://...' },
     path: '/v1/subscriptions',
   });
 
@@ -76,10 +89,11 @@ export const buildFakeApp = async (): Promise<INestApplication> => {
 
   await app.init();
 
-  assert.equal(fakeOAuthServer.isDone(), true);
-  assert.equal(fakeServiceAccounts.isDone(), true);
-  assert.equal(fakeGetSubscriptions.isDone(), true);
-  assert.equal(fakePostSubscriptions.isDone(), true);
+  assert.strictEqual(fakeOAuthServer.isDone(), true);
+  assert.strictEqual(fakeServiceAccounts.isDone(), true);
+  assert.strictEqual(fakeGetSubscriptions.isDone(), true);
+  assert.strictEqual(fakePostSubscriptions1.isDone(), true);
+  assert.strictEqual(fakePostSubscriptions2.isDone(), true);
 
   return app;
 };
