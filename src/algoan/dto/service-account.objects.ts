@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsString } from 'class-validator';
+import { IsNumber, IsPositive, IsString } from 'class-validator';
 
 /**
  * Client Config
@@ -12,4 +12,8 @@ export class ClientConfig {
 
   @IsString()
   public connectionUrl: string;
+
+  @IsNumber()
+  @IsPositive()
+  public finalConnectionTimeoutInMS: number;
 }
