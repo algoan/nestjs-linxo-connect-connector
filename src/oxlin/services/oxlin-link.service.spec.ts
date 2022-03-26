@@ -66,7 +66,7 @@ describe(OxlinLinkService.name, () => {
 
     const spy = jest
       .spyOn(customHttpService, 'post')
-      .mockReturnValue(Promise.resolve({ data } as unknown as AxiosResponse<WidgetSessionObject>));
+      .mockResolvedValue(Promise.resolve({ data } as unknown as AxiosResponse<WidgetSessionObject>));
 
     const link: string = await oxlinLinkService.getIframeUrl(
       `userAccessToken-${process.pid}`,

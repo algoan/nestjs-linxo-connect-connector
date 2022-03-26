@@ -50,7 +50,7 @@ describe(OxlinUserService.name, () => {
       };
       const spy = jest
         .spyOn(customHttpService, 'get')
-        .mockReturnValue(Promise.resolve({ data: userMock } as unknown as AxiosResponse<undefined>));
+        .mockResolvedValue(Promise.resolve({ data: userMock } as unknown as AxiosResponse<undefined>));
 
       const user: OxlinUser = await oxlinUserService.getUser('token', userMock.id);
 
@@ -63,7 +63,7 @@ describe(OxlinUserService.name, () => {
     it('should create a new user', async () => {
       const spy = jest
         .spyOn(customHttpService, 'post')
-        .mockReturnValue(
+        .mockResolvedValue(
           Promise.resolve({ headers: { location: '/users/1234' } } as unknown as AxiosResponse<undefined>),
         );
       const input: CreateUserInput = {
@@ -79,7 +79,7 @@ describe(OxlinUserService.name, () => {
     it('should throw an error if no location header', async () => {
       const spy = jest
         .spyOn(customHttpService, 'post')
-        .mockReturnValue(Promise.resolve({ headers: {} } as unknown as AxiosResponse<undefined>));
+        .mockResolvedValue(Promise.resolve({ headers: {} } as unknown as AxiosResponse<undefined>));
       const input: CreateUserInput = {
         email: 'toto',
         password: 'titi',
@@ -87,6 +87,18 @@ describe(OxlinUserService.name, () => {
       await expect(oxlinUserService.createNewUser('token', input)).rejects.toThrowErrorMatchingInlineSnapshot(
         '"Error while creating user"',
       );
+    });
+  });
+
+  describe('deleteUser', () => {
+    it('should create get a user', async () => {
+      const spy = jest
+        .spyOn(customHttpService, 'delete')
+        .mockResolvedValue(Promise.resolve({ data: {} } as unknown as AxiosResponse<undefined>));
+
+      await oxlinUserService.deleteUser('token', `id-${process.pid}`);
+
+      expect(spy).toHaveBeenCalledWith(config.oxlin.apiBaseUrl, `/users/id-${process.pid}`, undefined, 'token');
     });
   });
 });
