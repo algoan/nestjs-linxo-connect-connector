@@ -74,12 +74,17 @@
     function updateCustomer() {
       var req = new XMLHttpRequest();
       req.onreadystatechange = (customers) => {
-        var customer = JSON.parse(req.responseText)[0];
+        var customer = '';
+        try {
+          customer = JSON.parse(req.responseText)[0];
+        } catch (e) {}
 
-        if (customer.aggregationDetails.iframeUrl) {
-          setIframe(customer.aggregationDetails.iframeUrl);
-        } else {
-          removeIframe();
+        if (typeof customer === 'object') {
+          if (customer.aggregationDetails.iframeUrl) {
+            setIframe(customer.aggregationDetails.iframeUrl);
+          } else {
+            removeIframe();
+          }
         }
 
         if (req.readyState == 4 && req.status == 200) {
@@ -96,8 +101,13 @@
     function updateAnalysis() {
       var req = new XMLHttpRequest();
       req.onreadystatechange = () => {
+        var analysis = '';
+        try {
+          analysis = JSON.parse(req.responseText)[0];
+        } catch (e) {}
+
         if (req.readyState == 4 && req.status == 200) {
-          document.getElementById("analysis").innerText = JSON.stringify(JSON.parse(req.responseText)[0], undefined, 4);
+          document.getElementById("analysis").innerText = JSON.stringify(analysis, undefined, 4);
         }
       };
       req.open("GET", "/analyses");
@@ -120,12 +130,10 @@
      * setIframe
      */
     function setIframe(iframeUrl) {
-      console.log(document.getElementById('iframe-container').children);
-      console.log(document.getElementById('iframe-container').children.length);
       if (document.getElementById('iframe-container').children.length > 0) {
         return;
       }
-      
+
       var iframe = document.createElement('iframe');
       iframe.src = iframeUrl;
       iframe.style.width = '408px';
@@ -145,19 +153,35 @@
 
     /**
      * receiveMessage
+     *
+     * @link https://developers.oxlin.io/docs/accounts-api-howto-iframe/#an-alternative-to-redirect-uri-to-get-events
      */
+    var bankDetailInProgress = false;
     function receiveMessage(event) {
       console.log(event);
 
-      if (event.origin !== 'https://sandbox-api.oxlin.io' || typeof event.data !== "string") {
+      if (!(
+        event.origin === 'https://sandbox-embed.oxlin.io' &&
+        event.data.eventName === 'redirect_to' &&
+        event.data.redirect_url === '/success' &&
+        event.data.status === "success" &&
+        event.data.result === "created"&&
+        event.data.connection_id !== undefined
+      )) {
         return;
       }
 
+      // Message already in progress
+      if (bankDetailInProgress) {
+        return;
+      }
+      bankDetailInProgress = true;
+
       var req = new XMLHttpRequest();
       req.onload = () => {
-        document.getElementById('iframe-container').innerHTML = "";
-      }
-      req.open("GET", `/callback`);
+        document.getElementById('iframe-container').innerHTML = `</br></br><h4>Connection Id: ${event.data.connection_id}</h4></br></br></br>`;
+      };
+      req.open("GET", `/callback?code=${event.data.connection_id}`);
       req.send();
     }
 
