@@ -14,6 +14,6 @@ export interface AccountArgs {
   limit: number;
   status?: OxlinAccountStatus;
   connection_id: string;
-  usage: OxlinAccountUsage;
+  usage?: OxlinAccountUsage;
   sort?: string;
 }

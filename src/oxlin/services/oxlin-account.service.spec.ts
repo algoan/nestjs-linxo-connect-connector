@@ -10,7 +10,6 @@ import { CONFIG } from '../../config/config.module';
 
 import { CustomHttpService } from '../../shared/services/http.service';
 import { OxlinAccount } from '../dto/account.object';
-import { OxlinAccountUsage } from '../dto/account.enums';
 import { OxlinTransaction } from '../dto/transaction.object';
 import { OxlinAccountService } from './oxlin-account.service';
 
@@ -59,7 +58,6 @@ describe(OxlinAccountService.name, () => {
         `/accounts`,
         {
           connection_id: 'connectionId',
-          usage: OxlinAccountUsage.PERSONNAL,
           page: 1,
           limit: 100,
         },

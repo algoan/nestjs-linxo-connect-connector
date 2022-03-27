@@ -9,7 +9,6 @@ import { CONFIG } from '../../config/config.module';
 import { OxlinAccount } from '../dto/account.object';
 import { CustomHttpService } from '../../shared/services/http.service';
 import { AccountArgs } from '../dto/account.args';
-import { OxlinAccountUsage } from '../dto/account.enums';
 import { TransactionArgs } from '../dto/transaction.args';
 import { OxlinTransaction } from '../dto/transaction.object';
 
@@ -28,7 +27,6 @@ export class OxlinAccountService {
   public async getAllAccountsForConnection(userAccessToken: string, connectionId: string): Promise<OxlinAccount[]> {
     const args: Omit<AccountArgs, 'page'> = {
       connection_id: connectionId,
-      usage: OxlinAccountUsage.PERSONNAL,
       limit: 100,
     };
 
