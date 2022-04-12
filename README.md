@@ -133,7 +133,6 @@ Run Test
 ![index_page](public/index-page.png)
 
 - With the two provided buttons, you are able to test the two available Oxlin processes:
-  - Redirect: Click on the button "Redirect to Oxlin Link". It will call a `GET /redirect` API which simulates a webhook call to your connector and tries to fetch a redirect URL. At the end of the Oxlin Link process, a `GET /callback?code=...` will be called. It will simulated the `bank_reader_details` webhook event to the connector.
   - Embedded: Click on the button "Open embedded Oxlin Link". It will call a `GET /iframe` API which simulates a webhook call to your connector, tries to fetch an iframe URL and display an iframe with this URL. At the end of the Oxlin Link process, a `GET /callback?code=...` will be called. It will simulated the `bank_reader_details` webhook event to the connector. Moreover, the iframe is remove from the interface.
 
 ## Test

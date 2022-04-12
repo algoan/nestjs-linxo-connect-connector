@@ -4,7 +4,7 @@
       "id": "5f58a224aa55a30021bc7b01",
       "customIdentifier": "client_unique_identifier",
       "aggregationDetails": {
-        "callbackUrl": "http://localhost:4000/callback"
+        "callbackUrl": "http://localhost:4000"
       }
     }
   ],
@@ -24,7 +24,8 @@
       "config": {
         "clientId": "0ee2766c-0ffc-481f-8c9d-2099938820ed",
         "clientSecret": "a6c52b34a01c29c0155a",
-        "connectionUrl": "http://localhost:4000"
+        "connectionUrl": "http://localhost:4000",
+        "finalConnectionTimeoutInMS": 120000
       }
     }
   ],

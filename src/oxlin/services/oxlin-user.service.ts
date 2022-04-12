@@ -49,4 +49,16 @@ export class OxlinUserService {
 
     return userId;
   }
+
+  /**
+   * Delete the current user (Should be the same as the user token)
+   */
+  public async deleteUser(userAccessToken: string, userId: string): Promise<void> {
+    await this.customHttpService.delete<void>(
+      this.config.oxlin.apiBaseUrl,
+      `/users/${userId}`,
+      undefined,
+      userAccessToken,
+    );
+  }
 }

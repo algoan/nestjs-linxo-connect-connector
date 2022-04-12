@@ -18,11 +18,10 @@ export class BankDetailsRequiredDTO {
   public analysisId: string;
 
   /**
-   * Temp code to convert to an access token
-   *
-   * If not defined, the event is considered as a refresh
+   * Oxlin iframe sends a connection_id.
+   * So the temporaryCode should be interpreted as a connection_id for the bank_details_required event.
    */
-  @IsOptional()
   @IsString()
-  public temporaryCode?: string;
+  @IsNotEmpty()
+  public temporaryCode: string;
 }

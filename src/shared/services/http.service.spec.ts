@@ -149,4 +149,45 @@ describe(CustomHttpService.name, () => {
       expect(result.data).toBe('test');
     });
   });
+
+  describe('delete', () => {
+    let spy: jest.SpyInstance;
+
+    beforeEach(() => {
+      spy = jest.spyOn(httpService, 'delete').mockReturnValue(of({ data: 'test' } as AxiosResponse<string>));
+    });
+
+    it('should send a delete request with args WITH a token', async () => {
+      const args = {
+        param: `param-${process.pid}`,
+      };
+
+      // delete result with args
+      const result: AxiosResponse<string> = await customHttpService.delete(
+        'https://base.url',
+        '/my/path',
+        args,
+        'token',
+      );
+
+      expect(spy).toHaveBeenCalledWith(`https://base.url/my/path?${qs.stringify(args)}`, {
+        headers: { Authorization: 'Bearer token' },
+      });
+      expect(result.data).toBe('test');
+    });
+
+    it('should send a delete request with args WITHOUT a token', async () => {
+      const args = {
+        param: `param-${process.pid}`,
+      };
+
+      // delete result with args
+      const result: AxiosResponse<string> = await customHttpService.delete('https://base.url', '/my/path', args);
+
+      expect(spy).toHaveBeenCalledWith(`https://base.url/my/path?${qs.stringify(args)}`, {
+        headers: {},
+      });
+      expect(result.data).toBe('test');
+    });
+  });
 });

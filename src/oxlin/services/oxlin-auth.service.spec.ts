@@ -92,7 +92,7 @@ describe(OxlinAuthService.name, () => {
         client_id: serviceAccountConfigMock.clientId,
         client_secret: serviceAccountConfigMock.clientSecret,
         grant_type: GrantType.PASSWORD,
-        scope: 'accounts_manage connections_manage connections_sync transactions_read',
+        scope: 'profile profile_edit accounts_manage connections_manage connections_sync transactions_read',
 
         username: 'email@algoan.com',
         password: 'thisIsAStringPassword',

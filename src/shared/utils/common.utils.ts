@@ -54,3 +54,10 @@ export function assertsIsDefined<T>(value: T | undefined, error?: string | Error
     throw error;
   }
 }
+
+/**
+ * Delay function
+ */
+export async function delay(ms: number): Promise<void> {
+  return new Promise((resolve: () => void) => setTimeout(resolve, ms));
+}

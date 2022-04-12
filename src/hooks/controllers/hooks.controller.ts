@@ -3,6 +3,7 @@ import { Body, Controller, Headers, HttpCode, HttpStatus, Logger, Post, Unauthor
 
 import { assertsTypeValidation } from '../../shared/utils/common.utils';
 import { AggregatorLinkRequiredDTO } from '../dto/aggregator-link-required-payload.dto';
+import { BankDetailsRequiredDTO } from '../dto/bank-details-required-payload.dto';
 
 import { EventDTO } from '../dto/event.dto';
 import { HooksService } from '../services/hooks.service';
@@ -58,6 +59,15 @@ export class HooksController {
           void this.hooksService.handleAggregatorLinkRequiredEvent(event.payload).catch((err: Error) => {
             this.logger.error('An error occurred when "handleAggregatorLinkRequiredEvent"', err?.stack, err?.message);
           });
+          break;
+
+        case EventName.BANK_DETAILS_REQUIRED:
+          assertsTypeValidation(BankDetailsRequiredDTO, event.payload);
+          void this.hooksService
+            .handleBankDetailsRequiredEvent(event.payload, aggregationStartDate)
+            .catch((err: Error) => {
+              this.logger.error('An error occurred when "handleBankDetailsRequiredEvent"', err.stack, err.message);
+            });
           break;
 
         // The default case should never be reached, as the eventName is already checked in the DTO
