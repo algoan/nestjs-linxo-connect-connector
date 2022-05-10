@@ -29,7 +29,7 @@ export function mapOxlinDataToAlgoanAnalysis(
   );
 
   return {
-    status: AnalysisStatus.COMPLETED,
+    status: AnalysisStatus.IN_PROGRESS,
     format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
     connections: [
       {

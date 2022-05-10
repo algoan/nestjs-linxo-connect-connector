@@ -16,7 +16,7 @@ export enum AnalysisFormat {
 export enum AnalysisStatus {
   CREATED = 'CREATED',
   ERROR = 'ERROR',
-  INPROGRESS = 'IN_PROGRESS',
+  IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
 }
 

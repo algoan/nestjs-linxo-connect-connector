@@ -6,5 +6,5 @@ import { Analysis } from './analysis.objects';
  */
 export const analysisMock: Analysis = {
   id: 'Analysis-id',
-  status: AnalysisStatus.COMPLETED,
+  status: AnalysisStatus.IN_PROGRESS,
 };
