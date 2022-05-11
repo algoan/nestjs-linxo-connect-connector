@@ -6,8 +6,9 @@ on:
 env:
   NODE_ENV: test
 jobs:
-  main_workflow:
+  test_workflow:
     runs-on: ubuntu-latest
+    name: Run Build, Lint and Tests
     steps:
       # Checkout the repository
       - uses: actions/checkout@v2
@@ -31,3 +32,20 @@ jobs:
       - run: npm run test
       # Run functional tests with coverage
       - run: npm run test:e2e:cov
+
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy the docker image to GCP
+    if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v2
+      # Set up google credentials
+      - uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCLOUD_SA_KEY }}
+      # Configure Docker to use the gcloud command-line tool as a credential
+      # helper for authentication
+      - run: gcloud auth configure-docker europe-docker.pkg.dev
+      - run: npx semantic-release
