@@ -51,3 +51,5 @@ jobs:
       - run: gcloud auth configure-docker europe-docker.pkg.dev
       - run: npm install
       - run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_GHA_PAT }}
