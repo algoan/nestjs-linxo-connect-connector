@@ -36,6 +36,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy the docker image to GCP
+    needs: test_workflow
     if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
     steps:
       # Checkout the repository
@@ -48,4 +49,5 @@ jobs:
       # Configure Docker to use the gcloud command-line tool as a credential
       # helper for authentication
       - run: gcloud auth configure-docker europe-docker.pkg.dev
+      - run: npm install
       - run: npx semantic-release
