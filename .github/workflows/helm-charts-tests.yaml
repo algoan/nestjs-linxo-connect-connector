@@ -1,0 +1,106 @@
+name: Lint and Test Charts
+
+on:
+  push:
+    paths:
+      - '.helm/**'
+  pull_request:
+    paths:
+      - '.helm/**'
+
+jobs:
+  lint-chart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run chart-testing (lint)
+        uses: helm/chart-testing-action@master
+        with:
+          command: lint
+          config: .github/chart-testing.yaml
+
+  lint-docs:
+    runs-on: ubuntu-latest
+    needs: lint-chart
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Run helm-docs
+        run: .github/helm-docs.sh
+
+  kubeval-chart:
+    runs-on: ubuntu-latest
+    needs:
+      - lint-chart
+      - lint-docs
+    strategy:
+      matrix:
+        k8s:
+          - v1.21.12
+          - v1.22.9
+          - v1.23.6
+          - v1.24.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run kubeval
+        env:
+          KUBERNETES_VERSION: ${{ matrix.k8s }}
+        run: .github/kubeval.sh
+
+  install-chart:
+    name: install-chart
+    runs-on: ubuntu-latest
+    needs:
+      - lint-chart
+      - lint-docs
+      - kubeval-chart
+    strategy:
+      matrix:
+        k8s:
+          - v1.21.12
+          - v1.22.9
+          - v1.23.6
+          - v1.24.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Create kind ${{ matrix.k8s }} cluster
+        uses: helm/kind-action@master
+        with:
+          node_image: kindest/node:${{ matrix.k8s }}
+      - name: Run chart-testing (install)
+        uses: helm/chart-testing-action@master
+        with:
+          command: install
+          config: .github/chart-testing.yaml
+
+  release:
+    runs-on: ubuntu-latest
+    needs:
+      - lint-chart
+      - lint-docs
+      - kubeval-chart
+      - install-chart
+    if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      # Set up google credentials
+      - uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCLOUD_SA_KEY }}
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.8.1
+      # Configure Docker to use the gcloud command-line tool as a credential
+      # helper for authentication
+      - run: gcloud auth configure-docker europe-docker.pkg.dev
+      - name: Package Charts
+        run: helm package .helm/linxoconnectconnector
+      - name: Push Charts to Artifact Registry
+        run: helm push 
