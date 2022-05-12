@@ -14,12 +14,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Run chart-testing (lint)
-        uses: helm/chart-testing-action@master
         with:
-          command: lint
-          config: .github/chart-testing.yaml
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.8.1
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Run chart-testing (lint)
+        uses: helm/chart-testing-action@v2.2.1
+      - run: ct lint --config ${{ github.workspace }}/.github/chart-testing.yml
 
   lint-docs:
     runs-on: ubuntu-latest
@@ -34,17 +42,17 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - lint-chart
-      - lint-docs
     strategy:
       matrix:
         k8s:
           - v1.21.12
           - v1.22.9
           - v1.23.6
-          - v1.24.0
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Run kubeval
         env:
           KUBERNETES_VERSION: ${{ matrix.k8s }}
@@ -55,7 +63,6 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - lint-chart
-      - lint-docs
       - kubeval-chart
     strategy:
       matrix:
@@ -63,19 +70,26 @@ jobs:
           - v1.21.12
           - v1.22.9
           - v1.23.6
-          - v1.24.0
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Create kind ${{ matrix.k8s }} cluster
-        uses: helm/kind-action@master
+        uses: helm/kind-action@v1.2.0
         with:
           node_image: kindest/node:${{ matrix.k8s }}
-      - name: Run chart-testing (install)
-        uses: helm/chart-testing-action@master
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
         with:
-          command: install
-          config: .github/chart-testing.yaml
+          version: v3.8.1
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Run chart-testing (lint)
+        uses: helm/chart-testing-action@v2.2.1
+      - run: ct install --config ${{ github.workspace }}/.github/chart-testing.yml
 
   release:
     runs-on: ubuntu-latest
@@ -102,5 +116,11 @@ jobs:
       - run: gcloud auth configure-docker europe-docker.pkg.dev
       - name: Package Charts
         run: helm package .helm/linxoconnectconnector
+      - name: Get Chart version
+        id: get-chart-version
+        uses:  KJ002/read-yaml@1.6
+        with: 
+          file: ${{ github.workspace }}/.helm/linxoconnectconnector/Chart.yaml
+          key-path: '["version"]'
       - name: Push Charts to Artifact Registry
-        run: helm push 
+        run: helm push linxoconnectconnector-${{ steps.get-chart-version.outputs.data }}.tgz oci://europe-docker.pkg.dev/algoan-prod/linxo-connect-connector/charts

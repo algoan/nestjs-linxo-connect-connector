@@ -15,9 +15,6 @@ image:
 
 containerPort: 8080
 
-datadog:
-  enabled: true
-
 readinessProbe:
   initialDelaySeconds: 3
   periodSeconds: 10
@@ -54,4 +51,4 @@ tolerations: []
 
 config: '{}'
 
-secret: ''
+secret: '{}'
