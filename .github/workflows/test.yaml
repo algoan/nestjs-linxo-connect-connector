@@ -2,17 +2,12 @@
 name: Run Build and tests
 on:
   pull_request:
-    paths:
-      - src/**
-      - package*.json
-      - Dockerfile
-      - config/**
+    paths-ignore:
+      - .helm/**
   push:
-    paths:
-      - src/**
-      - package*.json
-      - Dockerfile
-      - config/**
+    paths-ignore:
+      - .helm/**
+
 env:
   NODE_ENV: test
 jobs:

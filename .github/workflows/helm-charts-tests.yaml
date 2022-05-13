@@ -123,4 +123,4 @@ jobs:
           file: ${{ github.workspace }}/.helm/linxoconnectconnector/Chart.yaml
           key-path: '["version"]'
       - name: Push Charts to Artifact Registry
-        run: helm push linxoconnectconnector-${{ steps.get-chart-version.outputs.data }}.tgz oci://europe-docker.pkg.dev/algoan-prod/linxo-connect-connector/charts
+        run: helm push charts-${{ steps.get-chart-version.outputs.data }}.tgz oci://europe-docker.pkg.dev/algoan-prod/linxo-connect-connector
