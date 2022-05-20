@@ -91,8 +91,9 @@ jobs:
         uses: helm/chart-testing-action@v2.2.1
       - run: ct install --config ${{ github.workspace }}/.github/chart-testing.yml
 
-  release:
+  release_artifact_registry:
     runs-on: ubuntu-latest
+    name: Release Charts on Google Artifact Registry as OCI
     needs:
       - lint-chart
       - lint-docs
@@ -124,3 +125,28 @@ jobs:
           key-path: '["version"]'
       - name: Push Charts to Artifact Registry
         run: helm push charts-${{ steps.get-chart-version.outputs.data }}.tgz oci://europe-docker.pkg.dev/algoan-prod/linxo-connect-connector
+
+  release_github_pages:
+    runs-on: ubuntu-latest
+    name: Release Charts on GitHub pages
+    needs:
+      - lint-chart
+      - lint-docs
+      - kubeval-chart
+      - install-chart
+    if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.4.0
+        with:
+          charts_dir: '.helm/'
+        env:
+          CR_TOKEN: '${{ secrets.PUBLIC_REPO_GHA_PAT }}'
