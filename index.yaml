@@ -2,6 +2,21 @@ apiVersion: v1
 entries:
   charts:
   - apiVersion: v2
+    created: "2022-05-27T13:31:46.48550345Z"
+    description: A Helm chart for Kubernetes allowing you to deploy Algoan's NestJS
+      Linxo Connect connector on your cluster
+    digest: 2a869e5d6959c28bbf06a9eebcbffa985b0fe074469f3d2d7dbd20d59deb162a
+    home: https://www.algoan.com
+    maintainers:
+    - email: support@algoan.com
+      name: algoan
+      url: https://www.algoan.com
+    name: charts
+    type: application
+    urls:
+    - https://github.com/algoan/nestjs-oxlin-connector/releases/download/charts-1.0.4/charts-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
     created: "2022-05-27T10:01:23.533958858Z"
     description: A Helm chart for Kubernetes allowing you to deploy Algoan's NestJS
       Linxo Connect connector on your cluster
@@ -46,4 +61,4 @@ entries:
     urls:
     - https://github.com/algoan/nestjs-oxlin-connector/releases/download/charts-1.0.1/charts-1.0.1.tgz
     version: 1.0.1
-generated: "2022-05-27T10:01:23.533969758Z"
+generated: "2022-05-27T13:31:46.48555415Z"
