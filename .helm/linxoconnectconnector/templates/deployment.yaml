@@ -73,8 +73,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- with .Values.affinity }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
+      tolerations: {{ .Values.tolerations }}
     {{- end }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- with .Values.imagePullSecrets }}
