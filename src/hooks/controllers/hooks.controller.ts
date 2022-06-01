@@ -72,16 +72,22 @@ export class HooksController {
 
         // The default case should never be reached, as the eventName is already checked in the DTO
         default:
-          void se.update({ status: EventStatus.FAILED });
+          void se.update({ status: EventStatus.FAILED }).catch((e: Error) => {
+            this.logger.error('An error occurred when updating event', e.stack);
+          });
 
           return;
       }
     } catch (err) {
-      void se.update({ status: EventStatus.ERROR });
+      void se.update({ status: EventStatus.ERROR }).catch((e: Error) => {
+        this.logger.error('An error occurred when updating event', e.stack);
+      });
 
       throw err;
     }
 
-    void se.update({ status: EventStatus.PROCESSED });
+    void se.update({ status: EventStatus.PROCESSED }).catch((e: Error) => {
+      this.logger.error('An error occurred when updating event', e.stack);
+    });
   }
 }
