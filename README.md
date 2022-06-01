@@ -1,27 +1,27 @@
 <p align="center">
-  <a href="http://algoan.com/" target="blank"><img src="./public/oxlin_algoan.png" width="500" alt="Algoan Logo" /></a>
+  <a href="http://algoan.com/" target="blank"><img src="./public/algoan_linxo_connect.png" width="500" alt="Algoan Logo" /></a>
 </p>
 
-![Run Build and tests](https://github.com/algoan/nestjs-connector-boilerplate/workflows/Run%20Build%20and%20tests/badge.svg?branch=master&event=push)
+[![Run Build and tests](https://github.com/algoan/nestjs-linxo-connect-connector/actions/workflows/test.yaml/badge.svg)](https://github.com/algoan/nestjs-linxo-connect-connector/actions/workflows/test.yaml)
 
-# Algoan NestJS Oxlin connector
+# Algoan NestJS Linxo Connect connector
 
-A simple connector using [NestJS](https://nestjs.com/) framework to connect your service to [Oxlin](https://oxlin.com/).
+A simple connector using [NestJS](https://nestjs.com/) framework to connect your service to [Linxo Connect](https://linxoconnect.com/).
 
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository for Algoan connectors.
 
-## About Algoan and Oxlin
+## About Algoan and Linxo Connect
 
 - [Algoan](https://www.algoan.com) helps companies to build the best open banking experience for credits. To see our products, please refer to our official website
-- [Oxlin](https://developers.oxlin.io) is a french banking data aggregator for financial services.
+- [Linxo Connect](https://developers.oxlin.io) is a french banking data aggregator for financial services.
 
 ## Goal and philosophy
 
 A connector is a web software able to connect a provider to Algoan's API. It subscribes to REST Hooks which lets Algoan notifying the connector when a specific event happens.
 
-The **`nestjs-oxlin-connector`** focuses on a user bank accounts and transactions. The main goal of this connector is to be able to retrieve a user bank data when Algoan wishes to.
+The **`nestjs-linxo-connect-connector`** focuses on a user bank accounts and transactions. The main goal of this connector is to be able to retrieve a user bank data when Algoan wishes to.
 
 ## Listened subscriptions
 
@@ -29,10 +29,11 @@ This section describes the process required for each subscription for an aggrega
 
 ### Aggregator Link Required
 
-The Oxlin user needs to be redirected to an external page.
+The Linxo Connect end-user needs to be redirected to an external page.
 
 * The client should have this configuration data in the service account:
-```
+  
+```typescript
   {
     "clientId": string;
     "clientSecret": string;
@@ -40,7 +41,8 @@ The Oxlin user needs to be redirected to an external page.
 ```
 
 * And the event should contains the customerId:
-```
+
+```typescript
   {
     customerId: string;
   }
@@ -56,11 +58,12 @@ Refers to the [`aggregator_link_required`](https://developers.algoan.com/public/
 
 When the user has finished the aggregation process, the connector has to retrieve user's banks accounts and transactions.
 
-* The event should contains those informations:
+* The event should contains those information:
+
 ```
   {
     customerId: string;
-    analysisId: string; // The ananlysis id to update with account and transaction data
+    analysisId: string; // The analysis id to update with account and transaction data
   }
 ```
 
@@ -109,7 +112,7 @@ This connector is a [Node.js](https://nodejs.org/en/) application. Before readin
 Clone the repository:
 
 ```bash
-$ git clone https://github.com/algoan/nestjs-oxlin-connector.git --depth=1
+$ git clone https://github.com/algoan/nestjs-linxo-connect-connector.git
 ```
 
 Install all dependencies running:
@@ -123,7 +126,7 @@ $ npm install
 To test locally the Oxlin Link process, a simple `index.html` file is rendered. To use it:
 
 Before testing
-- The client config: `locale`, `market`, `pricing` should be updated in `service-accounts.config` in  `./json-server/db.json'.
+- The client config should be updated in `service-accounts.config` in  `./json-server/db.json'.
 - You can enable http log `config/default.json` with `enableHttpRequestLog`, `enableHttpResponseLog`, `enableHttpErrorLog`
 
 Run Test
@@ -150,4 +153,4 @@ $ npm run test:cov
 
 ## Support
 
-If you need credentials for your service, please contact support@algoan.com.
+If you need credentials for your service, please contact [support@algoan.com](mailto://support@algoan.com).
