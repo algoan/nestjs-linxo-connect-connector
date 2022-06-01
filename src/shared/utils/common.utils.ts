@@ -43,19 +43,6 @@ export function assertsTypeValidation<ValueType extends object>(
 }
 
 /**
- * Assert a value is defined
- */
-export function assertsIsDefined<T>(value: T | undefined, error?: string | Error): asserts value is T {
-  if (value === undefined) {
-    if (typeof error === 'string') {
-      throw new Error(error);
-    }
-
-    throw error;
-  }
-}
-
-/**
  * Delay function
  */
 export async function delay(ms: number): Promise<void> {
