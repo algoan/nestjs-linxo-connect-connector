@@ -56,8 +56,8 @@ export class HooksController {
       switch (event.subscription.eventName) {
         case EventName.AGGREGATOR_LINK_REQUIRED:
           assertsTypeValidation(AggregatorLinkRequiredDTO, event.payload);
-          void this.hooksService.handleAggregatorLinkRequiredEvent(event.payload).catch((err: Error) => {
-            this.logger.error('An error occurred when "handleAggregatorLinkRequiredEvent"', err?.stack, err?.message);
+          void this.hooksService.handleAggregatorLinkRequiredEvent(event.payload).catch((e: Error) => {
+            this.logger.error('An error occurred when "handleAggregatorLinkRequiredEvent"', e.stack);
           });
           break;
 
@@ -65,23 +65,29 @@ export class HooksController {
           assertsTypeValidation(BankDetailsRequiredDTO, event.payload);
           void this.hooksService
             .handleBankDetailsRequiredEvent(event.payload, aggregationStartDate)
-            .catch((err: Error) => {
-              this.logger.error('An error occurred when "handleBankDetailsRequiredEvent"', err.stack, err.message);
+            .catch((e: Error) => {
+              this.logger.error('An error occurred when "handleBankDetailsRequiredEvent"', e.stack);
             });
           break;
 
         // The default case should never be reached, as the eventName is already checked in the DTO
         default:
-          void se.update({ status: EventStatus.FAILED });
+          void se.update({ status: EventStatus.FAILED }).catch((e: Error) => {
+            this.logger.error('An error occurred when updating event', e.stack);
+          });
 
           return;
       }
     } catch (err) {
-      void se.update({ status: EventStatus.ERROR });
+      void se.update({ status: EventStatus.ERROR }).catch((e: Error) => {
+        this.logger.error('An error occurred when updating event', e.stack);
+      });
 
       throw err;
     }
 
-    void se.update({ status: EventStatus.PROCESSED });
+    void se.update({ status: EventStatus.PROCESSED }).catch((e: Error) => {
+      this.logger.error('An error occurred when updating event', e.stack);
+    });
   }
 }
