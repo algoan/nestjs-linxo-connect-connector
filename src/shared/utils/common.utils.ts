@@ -1,6 +1,7 @@
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
 
 import { ClassType, transformAndValidateSync } from 'class-transformer-validator';
+import { ValidationError } from 'class-validator';
 
 /**
  * Convert null values in the given value to undefined
@@ -39,7 +40,19 @@ export function assertsTypeValidation<ValueType extends object>(
   // eslint-disable-next-line @typescript-eslint/ban-types
   value: object,
 ): asserts value is ValueType {
-  transformAndValidateSync(classValidation, value);
+  try {
+    transformAndValidateSync(classValidation, value);
+  } catch (e) {
+    if (e instanceof Array) {
+      const errorMsg: string = e
+        .map((error: ValidationError) => Object.values(error.constraints ?? []).join('\n'))
+        .join('\n');
+
+      throw new Error(`${classValidation.name} validation: \n ${errorMsg}`);
+    }
+
+    throw e;
+  }
 }
 
 /**
