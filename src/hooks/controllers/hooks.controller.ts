@@ -56,8 +56,8 @@ export class HooksController {
       switch (event.subscription.eventName) {
         case EventName.AGGREGATOR_LINK_REQUIRED:
           assertsTypeValidation(AggregatorLinkRequiredDTO, event.payload);
-          void this.hooksService.handleAggregatorLinkRequiredEvent(event.payload).catch((err: Error) => {
-            this.logger.error('An error occurred when "handleAggregatorLinkRequiredEvent"', err?.stack, err?.message);
+          void this.hooksService.handleAggregatorLinkRequiredEvent(event.payload).catch((e: Error) => {
+            this.logger.error('An error occurred when "handleAggregatorLinkRequiredEvent"', e.stack);
           });
           break;
 
@@ -65,8 +65,8 @@ export class HooksController {
           assertsTypeValidation(BankDetailsRequiredDTO, event.payload);
           void this.hooksService
             .handleBankDetailsRequiredEvent(event.payload, aggregationStartDate)
-            .catch((err: Error) => {
-              this.logger.error('An error occurred when "handleBankDetailsRequiredEvent"', err.stack, err.message);
+            .catch((e: Error) => {
+              this.logger.error('An error occurred when "handleBankDetailsRequiredEvent"', e.stack);
             });
           break;
 
