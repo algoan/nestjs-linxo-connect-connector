@@ -18,7 +18,7 @@ export const linxoConnectAccountMock: LinxoConnectAccount = {
   balance_date: 0,
   type: LinxoConnectAccountType.CHECKINGS,
   status: LinxoConnectAccountStatus.ACTIVE,
-  classification: LinxoConnectAccountUsage.PERSONNAL,
+  classification: LinxoConnectAccountUsage.PERSONAL,
   creation_date: 0,
   loan: {},
   savings: {},
