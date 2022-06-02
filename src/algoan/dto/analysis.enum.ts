@@ -4,10 +4,6 @@
  * Analysis Status enum
  */
 export enum AnalysisFormat {
-  ALGOAN = 'ALGOAN',
-  BUDGET_INSIGHT_V2 = 'BUDGET_INSIGHT_V2',
-  OXLIN_DIRECT_ACCOUNT_V3 = 'OXLIN_DIRECT_ACCOUNT_V3',
-  OXLIN_ACCOUNT_API_V2 = 'OXLIN_ACCOUNT_API_V2',
 }
 
 /**
