@@ -96,14 +96,14 @@ describe('HooksController (e2e)', () => {
             userId: 'new-user-id',
             iframeUrl: 'https://sandbox-embed.oxlin.io/widget/add_connection?session_id=xxxxxxxx',
             mode: AggregationDetailsMode.iframe,
-            aggregatorName: AggregationDetailsAggregatorName.oxlin,
+            aggregatorName: AggregationDetailsAggregatorName.linxoConnect,
           },
         },
         path: '/v2/customers/customerId',
       });
 
       fakeAPI({
-        baseUrl: config.oxlin.authBaseUrl,
+        baseUrl: config.linxoConnect.authBaseUrl,
         method: 'post',
         result: {
           access_token: 'new-token',
@@ -113,7 +113,7 @@ describe('HooksController (e2e)', () => {
       });
 
       fakeAPI({
-        baseUrl: config.oxlin.apiBaseUrl,
+        baseUrl: config.linxoConnect.apiBaseUrl,
         method: 'post',
         result: {},
         responseHeaders: {
@@ -123,7 +123,7 @@ describe('HooksController (e2e)', () => {
       });
 
       fakeAPI({
-        baseUrl: config.oxlin.embedBaseUrl,
+        baseUrl: config.linxoConnect.embedBaseUrl,
         method: 'post',
         result: {
           session_id: 'xxxxxxx',

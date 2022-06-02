@@ -5,7 +5,7 @@
  *
  * @link https://developers.oxlin.io/reference-accounts-api/#operation/getTransactions
  */
-export enum OxlinTransactionType {
+export enum LinxoConnectTransactionType {
   CREDIT = 'CREDIT',
   DEBIT = 'DEBIT',
   INTEREST = 'INTEREST',
@@ -31,7 +31,7 @@ export enum OxlinTransactionType {
  *
  * @link https://developers.oxlin.io/reference-accounts-api/#operation/getTransactions
  */
-export enum OxlinTransactionOrigin {
+export enum LinxoConnectTransactionOrigin {
   ORIGINAL = 'ORIGINAL',
   UPCOMING = 'UPCOMING',
   TRANSACTION = 'TRANSACTION',
@@ -44,7 +44,7 @@ export enum OxlinTransactionOrigin {
  *
  * @link https://developers.oxlin.io/reference-accounts-api/#operation/getTransactions
  */
-export enum OxlinTransactionStatus {
+export enum LinxoConnectTransactionStatus {
   BOOKED = 'BOOKED',
   PENDING = 'PENDING',
   OTHER = 'OTHER',

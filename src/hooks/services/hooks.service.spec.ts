@@ -14,20 +14,20 @@ import { config } from 'node-config-ts';
 import { ContextIdFactory } from '@nestjs/core';
 import { createMock } from '@golevelup/ts-jest';
 
-import { OxlinConnectionStatus } from '../../oxlin/dto/connection.enums';
-import { oxlinUserMock } from '../../oxlin/dto/user.object.mock';
-import { oxlinConnectionMock } from '../../oxlin/dto/connection.object.mock';
-import { oxlinAccountsMock } from '../../oxlin/dto/account.object.mock';
-import { oxlinTransactionsMock } from '../../oxlin/dto/transaction.object.mock';
+import { LinxoConnectConnectionStatus } from '../../linxo-connect/dto/connection.enums';
+import { linxoConnectUserMock } from '../../linxo-connect/dto/user.object.mock';
+import { linxoConnectConnectionMock } from '../../linxo-connect/dto/connection.object.mock';
+import { linxoConnectAccountsMock } from '../../linxo-connect/dto/account.object.mock';
+import { linxoConnectTransactionsMock } from '../../linxo-connect/dto/transaction.object.mock';
 import { AnalysisFormat, AnalysisStatus, ErrorCodes } from '../../algoan/dto/analysis.enum';
 import { analysisMock } from '../../algoan/dto/analysis.objects.mock';
-import { OxlinAccountService } from '../../oxlin/services/oxlin-account.service';
-import { OxlinConnectionService } from '../../oxlin/services/oxlin-connection.service';
+import { LinxoConnectAccountService } from '../../linxo-connect/services/linxo-account.service';
+import { LinxoConnectConnectionService } from '../../linxo-connect/services/linxo-connection.service';
 import { AlgoanAnalysisService } from '../../algoan/services/algoan-analysis.service';
-import { OxlinAuthService } from '../../oxlin/services/oxlin-auth.service';
-import { OxlinModule } from '../../oxlin/oxlin.module';
-import { OxlinLinkService } from '../../oxlin/services/oxlin-link.service';
-import { OxlinUserService } from '../../oxlin/services/oxlin-user.service';
+import { LinxoConnectAuthService } from '../../linxo-connect/services/linxo-auth.service';
+import { LinxoConnectModule } from '../../linxo-connect/linxo.module';
+import { LinxoConnectLinkService } from '../../linxo-connect/services/linxo-link.service';
+import { LinxoConnectUserService } from '../../linxo-connect/services/linxo-user.service';
 import { serviceAccountConfigMock } from '../../algoan/dto/service-account.objects.mock';
 import { AlgoanModule } from '../../algoan/algoan.module';
 import { customerMock } from '../../algoan/dto/customer.objects.mock';
@@ -41,7 +41,7 @@ import { aggregatorLinkRequiredMock } from '../dto/aggregator-link-required-payl
 import { subscriptionMock } from '../dto/subscription.dto.mock';
 
 import { bankDetailsRequiredMock } from '../dto/bank-details-required-payload.dto.mock';
-import { mapOxlinDataToAlgoanAnalysis } from '../mappers/analysis.mapper';
+import { mapLinxoConnectDataToAlgoanAnalysis } from '../mappers/analysis.mapper';
 import { HooksService } from './hooks.service';
 
 describe('HookService', () => {
@@ -50,11 +50,11 @@ describe('HookService', () => {
   let algoanHttpService: AlgoanHttpService;
   let algoanCustomerService: AlgoanCustomerService;
   let algoanAnalysisService: AlgoanAnalysisService;
-  let oxlinLinkService: OxlinLinkService;
-  let oxlinUserService: OxlinUserService;
-  let oxlinAuthService: OxlinAuthService;
-  let oxlinConnectionService: OxlinConnectionService;
-  let oxlinAccountService: OxlinAccountService;
+  let linxoConnectLinkService: LinxoConnectLinkService;
+  let linxoConnectUserService: LinxoConnectUserService;
+  let linxoConnectAuthService: LinxoConnectAuthService;
+  let linxoConnectConnectionService: LinxoConnectConnectionService;
+  let linxoConnectAccountService: LinxoConnectAccountService;
   let serviceAccount: ServiceAccount;
 
   beforeEach(async () => {
@@ -71,7 +71,7 @@ describe('HookService', () => {
     } as IServiceAccount);
 
     const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [AlgoanModule, OxlinModule],
+      imports: [AlgoanModule, LinxoConnectModule],
       providers: [
         HooksService,
         {
@@ -92,11 +92,17 @@ describe('HookService', () => {
     algoanHttpService = await moduleRef.resolve<AlgoanHttpService>(AlgoanHttpService, contextId);
     algoanCustomerService = await moduleRef.resolve<AlgoanCustomerService>(AlgoanCustomerService, contextId);
     algoanAnalysisService = await moduleRef.resolve<AlgoanAnalysisService>(AlgoanAnalysisService, contextId);
-    oxlinAuthService = await moduleRef.resolve<OxlinAuthService>(OxlinAuthService, contextId);
-    oxlinUserService = await moduleRef.resolve<OxlinUserService>(OxlinUserService, contextId);
-    oxlinLinkService = await moduleRef.resolve<OxlinLinkService>(OxlinLinkService, contextId);
-    oxlinConnectionService = await moduleRef.resolve<OxlinConnectionService>(OxlinConnectionService, contextId);
-    oxlinAccountService = await moduleRef.resolve<OxlinAccountService>(OxlinAccountService, contextId);
+    linxoConnectAuthService = await moduleRef.resolve<LinxoConnectAuthService>(LinxoConnectAuthService, contextId);
+    linxoConnectUserService = await moduleRef.resolve<LinxoConnectUserService>(LinxoConnectUserService, contextId);
+    linxoConnectLinkService = await moduleRef.resolve<LinxoConnectLinkService>(LinxoConnectLinkService, contextId);
+    linxoConnectConnectionService = await moduleRef.resolve<LinxoConnectConnectionService>(
+      LinxoConnectConnectionService,
+      contextId,
+    );
+    linxoConnectAccountService = await moduleRef.resolve<LinxoConnectAccountService>(
+      LinxoConnectAccountService,
+      contextId,
+    );
     serviceAccount = await moduleRef.resolve<ServiceAccount>(ServiceAccount, contextId);
 
     jest.spyOn(Algoan.prototype, 'initRestHooks').mockResolvedValue();
@@ -131,11 +137,15 @@ describe('HookService', () => {
       algoanAuthenticateSpy = jest.spyOn(algoanHttpService, 'authenticate').mockReturnValue();
       updateCustomerSpy = jest.spyOn(algoanCustomerService, 'updateCustomer').mockResolvedValue(customerMock);
       getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue(customerMock);
-      geClientTokenSpy = jest.spyOn(oxlinAuthService, 'geClientToken').mockResolvedValue(`client-token-${process.pid}`);
-      getUserTokenSpy = jest.spyOn(oxlinAuthService, 'getUserToken').mockResolvedValue(`user-token-${process.pid}`);
-      getUserSpy = jest.spyOn(oxlinUserService, 'getUser').mockResolvedValue(oxlinUserMock);
-      createNewUserSpy = jest.spyOn(oxlinUserService, 'createNewUser').mockResolvedValue(`id-${process.pid}`);
-      getIframeUrlSpy = jest.spyOn(oxlinLinkService, 'getIframeUrl').mockResolvedValue('MY_LINK_URL');
+      geClientTokenSpy = jest
+        .spyOn(linxoConnectAuthService, 'geClientToken')
+        .mockResolvedValue(`client-token-${process.pid}`);
+      getUserTokenSpy = jest
+        .spyOn(linxoConnectAuthService, 'getUserToken')
+        .mockResolvedValue(`user-token-${process.pid}`);
+      getUserSpy = jest.spyOn(linxoConnectUserService, 'getUser').mockResolvedValue(linxoConnectUserMock);
+      createNewUserSpy = jest.spyOn(linxoConnectUserService, 'createNewUser').mockResolvedValue(`id-${process.pid}`);
+      getIframeUrlSpy = jest.spyOn(linxoConnectLinkService, 'getIframeUrl').mockResolvedValue('MY_LINK_URL');
     });
 
     it('should throw error if customer callback url missing', async () => {
@@ -160,7 +170,7 @@ describe('HookService', () => {
       );
     });
 
-    it('should do these steps WITHOUT an existing oxlin user', async () => {
+    it('should do these steps WITHOUT an existing linxo connect user', async () => {
       await hookService.handleAggregatorLinkRequiredEvent(aggregatorLinkRequiredMock);
 
       // get algoan customer
@@ -170,7 +180,7 @@ describe('HookService', () => {
       // Should not to get the existing user
       expect(getUserSpy).not.toHaveBeenCalled();
 
-      // get a oxlin client token
+      // get a linxo connect client token
       expect(geClientTokenSpy).toHaveBeenCalledWith(
         serviceAccountConfigMock.clientId,
         serviceAccountConfigMock.clientSecret,
@@ -204,12 +214,12 @@ describe('HookService', () => {
           iframeUrl: 'MY_LINK_URL',
           userId: `id-${process.pid}`,
           mode: AggregationDetailsMode.iframe,
-          aggregatorName: AggregationDetailsAggregatorName.oxlin,
+          aggregatorName: AggregationDetailsAggregatorName.linxoConnect,
         },
       });
     });
 
-    it('should do these steps WITH an existing oxlin user', async () => {
+    it('should do these steps WITH an existing linxo connect user', async () => {
       // mock to return an existing userId
       getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
@@ -230,7 +240,7 @@ describe('HookService', () => {
       );
       expect(getUserSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, `id-${process.pid}`);
 
-      // DO NOT get a oxlin client token
+      // DO NOT get a linxo connect client token
       expect(geClientTokenSpy).not.toHaveBeenCalled();
       // and DO NOT create a new user
       expect(createNewUserSpy).not.toHaveBeenCalled();
@@ -258,12 +268,12 @@ describe('HookService', () => {
           iframeUrl: 'MY_LINK_URL',
           userId: `id-${process.pid}`,
           mode: AggregationDetailsMode.iframe,
-          aggregatorName: AggregationDetailsAggregatorName.oxlin,
+          aggregatorName: AggregationDetailsAggregatorName.linxoConnect,
         },
       });
     });
 
-    it('should do these steps WITH an existing oxlin user AND there is an error while retrieving it', async () => {
+    it('should do these steps WITH an existing linxo connect user AND there is an error while retrieving it', async () => {
       // mock to return an existing userId
       getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
@@ -274,7 +284,7 @@ describe('HookService', () => {
       });
 
       // Throw an error while conecting as the existing user
-      getUserTokenSpy = jest.spyOn(oxlinAuthService, 'getUserToken').mockRejectedValueOnce(new Error());
+      getUserTokenSpy = jest.spyOn(linxoConnectAuthService, 'getUserToken').mockRejectedValueOnce(new Error());
 
       await hookService.handleAggregatorLinkRequiredEvent(aggregatorLinkRequiredMock);
 
@@ -289,7 +299,7 @@ describe('HookService', () => {
 
       // BUT there is an error
 
-      // SO Connect to oxlin as client
+      // SO Connect to linxo connect as client
       expect(geClientTokenSpy).toHaveBeenCalledWith(
         serviceAccountConfigMock.clientId,
         serviceAccountConfigMock.clientSecret,
@@ -323,7 +333,7 @@ describe('HookService', () => {
           iframeUrl: 'MY_LINK_URL',
           userId: `id-${process.pid}`,
           mode: AggregationDetailsMode.iframe,
-          aggregatorName: AggregationDetailsAggregatorName.oxlin,
+          aggregatorName: AggregationDetailsAggregatorName.linxoConnect,
         },
       });
     });
@@ -344,18 +354,20 @@ describe('HookService', () => {
       algoanAuthenticateSpy = jest.spyOn(algoanHttpService, 'authenticate').mockReturnValue();
       getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue(customerMock);
       updateAnalysisSpy = jest.spyOn(algoanAnalysisService, 'updateAnalysis').mockResolvedValue(analysisMock);
-      getUserTokenSpy = jest.spyOn(oxlinAuthService, 'getUserToken').mockResolvedValue(`user-token-${process.pid}`);
-      getUserSpy = jest.spyOn(oxlinUserService, 'getUser').mockResolvedValue(oxlinUserMock);
-      deleteUserTokenSpy = jest.spyOn(oxlinUserService, 'deleteUser').mockResolvedValue();
+      getUserTokenSpy = jest
+        .spyOn(linxoConnectAuthService, 'getUserToken')
+        .mockResolvedValue(`user-token-${process.pid}`);
+      getUserSpy = jest.spyOn(linxoConnectUserService, 'getUser').mockResolvedValue(linxoConnectUserMock);
+      deleteUserTokenSpy = jest.spyOn(linxoConnectUserService, 'deleteUser').mockResolvedValue();
       getConnectionByIdSpy = jest
-        .spyOn(oxlinConnectionService, 'getConnectionWithFinalStatus')
-        .mockResolvedValue(oxlinConnectionMock);
+        .spyOn(linxoConnectConnectionService, 'getConnectionWithFinalStatus')
+        .mockResolvedValue(linxoConnectConnectionMock);
       getAllAccountsForConnectionSpy = jest
-        .spyOn(oxlinAccountService, 'getAllAccountsForConnection')
-        .mockResolvedValue(oxlinAccountsMock);
+        .spyOn(linxoConnectAccountService, 'getAllAccountsForConnection')
+        .mockResolvedValue(linxoConnectAccountsMock);
       getAllTransactionsForAllAccountsSpy = jest
-        .spyOn(oxlinAccountService, 'getAllTransactionsForAllAccounts')
-        .mockResolvedValue(oxlinTransactionsMock);
+        .spyOn(linxoConnectAccountService, 'getAllTransactionsForAllAccounts')
+        .mockResolvedValue(linxoConnectTransactionsMock);
     });
 
     it('should throw error if client config missing', async () => {
@@ -368,7 +380,7 @@ describe('HookService', () => {
         bankDetailsRequiredMock.customerId,
         bankDetailsRequiredMock.analysisId,
         {
-          format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
+          format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
           status: AnalysisStatus.ERROR,
           error: {
             code: ErrorCodes.INTERNAL_ERROR,
@@ -379,16 +391,16 @@ describe('HookService', () => {
       );
     });
 
-    it('should do these steps WITHOUT an existing oxlin user', async () => {
+    it('should do these steps WITHOUT an existing linxo connect user', async () => {
       await expect(
         hookService.handleBankDetailsRequiredEvent(bankDetailsRequiredMock, new Date()),
-      ).rejects.toThrowError("Oxlin user id is not defined, can't connect to Oxlin");
+      ).rejects.toThrowError("LinxoConnect user id is not defined, can't connect to LinxoConnect");
 
       expect(updateAnalysisSpy).toHaveBeenCalledWith(
         bankDetailsRequiredMock.customerId,
         bankDetailsRequiredMock.analysisId,
         {
-          format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
+          format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
           status: AnalysisStatus.ERROR,
           error: {
             code: ErrorCodes.INTERNAL_ERROR,
@@ -399,7 +411,7 @@ describe('HookService', () => {
       );
     });
 
-    it('should do these steps WITH an existing oxlin user and WITH WRONG connection status', async () => {
+    it('should do these steps WITH an existing linxo connect user and WITH WRONG connection status', async () => {
       // mock to return an existing userId
       getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
@@ -410,17 +422,17 @@ describe('HookService', () => {
       });
 
       getConnectionByIdSpy.mockResolvedValue({
-        ...oxlinConnectionMock,
-        status: OxlinConnectionStatus.FAILED,
+        ...linxoConnectConnectionMock,
+        status: LinxoConnectConnectionStatus.FAILED,
       });
 
       await hookService.handleBankDetailsRequiredEvent(bankDetailsRequiredMock, new Date());
 
-      // Start to get Oxlin data
+      // Start to get LinxoConnect data
       // first get connection
       expect(getConnectionByIdSpy).toHaveBeenCalledWith(
         `user-token-${process.pid}`,
-        oxlinUserMock.id,
+        linxoConnectUserMock.id,
         bankDetailsRequiredMock.temporaryCode,
         serviceAccountConfigMock.finalConnectionTimeoutInMS,
       );
@@ -429,13 +441,13 @@ describe('HookService', () => {
         bankDetailsRequiredMock.customerId,
         bankDetailsRequiredMock.analysisId,
         {
-          format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
+          format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
           status: AnalysisStatus.ERROR,
           error: {
             code: ErrorCodes.INTERNAL_ERROR,
-            message: `Fail to get connection with a valid status. Received ${OxlinConnectionStatus.FAILED}`,
+            message: `Fail to get connection with a valid status. Received ${LinxoConnectConnectionStatus.FAILED}`,
           },
-          connections: [{ ...oxlinConnectionMock, status: OxlinConnectionStatus.FAILED, accounts: [] }],
+          connections: [{ ...linxoConnectConnectionMock, status: LinxoConnectConnectionStatus.FAILED, accounts: [] }],
         },
       );
 
@@ -449,7 +461,7 @@ describe('HookService', () => {
       expect(deleteUserTokenSpy).not.toHaveBeenCalled();
     });
 
-    it('should do these steps if Oxlin return an error', async () => {
+    it('should do these steps if LinxoConnect return an error', async () => {
       // mock to return an existing userId
       getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
@@ -469,7 +481,7 @@ describe('HookService', () => {
         bankDetailsRequiredMock.customerId,
         bankDetailsRequiredMock.analysisId,
         {
-          format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
+          format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
           status: AnalysisStatus.ERROR,
           error: {
             code: ErrorCodes.INTERNAL_ERROR,
@@ -483,7 +495,7 @@ describe('HookService', () => {
       expect(deleteUserTokenSpy).not.toHaveBeenCalled();
     });
 
-    it('should do these steps WITH an existing oxlin user and WITHOUT Oxlin error', async () => {
+    it('should do these steps WITH an existing linxo connect user and WITHOUT LinxoConnect error', async () => {
       // mock to return an existing userId
       getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
@@ -512,33 +524,40 @@ describe('HookService', () => {
         algoanCustomerService.getDefaultPassword(customerMock.id),
       );
 
-      // Start to get Oxlin data
+      // Start to get LinxoConnect data
       // first get connection
       expect(getConnectionByIdSpy).toHaveBeenCalledWith(
         `user-token-${process.pid}`,
-        oxlinUserMock.id,
+        linxoConnectUserMock.id,
         bankDetailsRequiredMock.temporaryCode,
         serviceAccountConfigMock.finalConnectionTimeoutInMS,
       );
 
       // then accounts
-      expect(getAllAccountsForConnectionSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, oxlinConnectionMock.id);
+      expect(getAllAccountsForConnectionSpy).toHaveBeenCalledWith(
+        `user-token-${process.pid}`,
+        linxoConnectConnectionMock.id,
+      );
 
       // and then transactions for all accounts
       expect(getAllTransactionsForAllAccountsSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, [
-        oxlinAccountsMock[0].id,
-        oxlinAccountsMock[1].id,
+        linxoConnectAccountsMock[0].id,
+        linxoConnectAccountsMock[1].id,
       ]);
 
-      // We can now update the analysis with oxlin data
+      // We can now update the analysis with linxo connect data
       expect(updateAnalysisSpy).toHaveBeenCalledWith(
         bankDetailsRequiredMock.customerId,
         bankDetailsRequiredMock.analysisId,
-        mapOxlinDataToAlgoanAnalysis(oxlinConnectionMock, oxlinAccountsMock, oxlinTransactionsMock),
+        mapLinxoConnectDataToAlgoanAnalysis(
+          linxoConnectConnectionMock,
+          linxoConnectAccountsMock,
+          linxoConnectTransactionsMock,
+        ),
       );
 
       // And finally we can delete the user
-      expect(deleteUserTokenSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, oxlinUserMock.id);
+      expect(deleteUserTokenSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, linxoConnectUserMock.id);
     });
   });
 });

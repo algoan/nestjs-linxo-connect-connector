@@ -10,10 +10,10 @@ import { AccessTokenObject } from '../dto/access-token.object';
 import { CustomHttpService } from '../../shared/services/http.service';
 
 /**
- * Service to request oxlin APIs
+ * Service to request linxo connect APIs
  */
 @Injectable()
-export class OxlinAuthService {
+export class LinxoConnectAuthService {
   constructor(@Inject(CONFIG) private readonly config: Config, private readonly customHttpService: CustomHttpService) {}
 
   /**
@@ -50,13 +50,13 @@ export class OxlinAuthService {
   }
 
   /**
-   * Authenticate the service to oxlin
+   * Authenticate the service to linxo connect
    */
   private async getNewToken(input: AccessTokenInput): Promise<string> {
     const authResponse: AxiosResponse<AccessTokenObject> = await this.customHttpService.post<
       AccessTokenObject,
       AccessTokenInput
-    >(this.config.oxlin.authBaseUrl, `/token`, input);
+    >(this.config.linxoConnect.authBaseUrl, `/token`, input);
 
     return authResponse.data.access_token;
   }

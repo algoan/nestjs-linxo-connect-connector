@@ -5,7 +5,7 @@
  *
  * @link https://developers.oxlin.io/reference-accounts-api/#operation/getAccounts
  */
-export enum OxlinAccountType {
+export enum LinxoConnectAccountType {
   CHECKINGS = 'CHECKINGS',
   SAVINGS = 'SAVINGS',
   LOAN = 'LOAN',
@@ -17,7 +17,7 @@ export enum OxlinAccountType {
  *
  * @link https://developers.oxlin.io/reference-accounts-api/#operation/getAccounts
  */
-export enum OxlinAccountStatus {
+export enum LinxoConnectAccountStatus {
   MANUAL = 'MANUAL',
   ACTIVE = 'ACTIVE',
   ERROR = 'ERROR',
@@ -32,7 +32,7 @@ export enum OxlinAccountStatus {
  *
  * @link https://developers.oxlin.io/reference-accounts-api/#operation/getAccounts
  */
-export enum OxlinAccountUsage {
+export enum LinxoConnectAccountUsage {
   PERSONNAL = 'PERSONNAL',
   PROFESSIONAL = 'PROFESSIONAL',
 }

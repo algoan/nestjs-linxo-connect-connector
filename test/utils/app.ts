@@ -44,9 +44,10 @@ export const buildFakeApp = async (): Promise<INestApplication> => {
         clientSecret: 'secret',
         id: 'id1',
         config: {
-          clientId: 'oxlinclientId',
-          clientSecret: 'oxlinClientSecret',
+          clientId: 'linxoConnectclientId',
+          clientSecret: 'linxoConnectClientSecret',
           connectionUrl: 'http://localhost:4000',
+          finalConnectionTimeoutInMS: 10000,
         },
       },
     ],

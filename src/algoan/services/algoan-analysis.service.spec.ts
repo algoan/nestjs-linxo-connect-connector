@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { config } from 'node-config-ts';
 
 import { ContextIdFactory } from '@nestjs/core';
-import { OxlinAccountApiV2AnalysisUpdateInput } from '../dto/analysis.inputs';
+import { LinxoConnectAccountApiV2AnalysisUpdateInput } from '../dto/analysis.inputs';
 import { Analysis } from '../dto/analysis.objects';
 import { analysisMock } from '../dto/analysis.objects.mock';
 
@@ -43,8 +43,8 @@ describe('AlgoanAnalysisService', () => {
   describe('updateAnalysis', () => {
     it('should patch an analysis', async () => {
       const spy = jest.spyOn(algoanHttpService, 'patch').mockReturnValue(Promise.resolve(analysisMock));
-      const input: OxlinAccountApiV2AnalysisUpdateInput<unknown, unknown, unknown> = {
-        format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
+      const input: LinxoConnectAccountApiV2AnalysisUpdateInput<unknown, unknown, unknown> = {
+        format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
         connections: [],
       };
       const analysis: Analysis = await algoanAnalysisService.updateAnalysis(customerMock.id, analysisMock.id, input);

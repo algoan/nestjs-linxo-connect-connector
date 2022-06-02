@@ -8,15 +8,15 @@ import { config } from 'node-config-ts';
 
 import { CONFIG } from '../../config/config.module';
 import { CreateUserInput } from '../dto/create-user.input';
-import { OxlinUser } from '../dto/user.object';
+import { LinxoConnectUser } from '../dto/user.object';
 
 import { CustomHttpService } from '../../shared/services/http.service';
-import { OxlinConnection } from '../dto/connection.object';
-import { OxlinConnectionStatus } from '../dto/connection.enums';
-import { OxlinConnectionService } from './oxlin-connection.service';
+import { LinxoConnectConnection } from '../dto/connection.object';
+import { LinxoConnectConnectionStatus } from '../dto/connection.enums';
+import { LinxoConnectConnectionService } from './linxo-connection.service';
 
-describe(OxlinConnectionService.name, () => {
-  let oxlinConnectionService: OxlinConnectionService;
+describe(LinxoConnectConnectionService.name, () => {
+  let linxoConnectConnectionService: LinxoConnectConnectionService;
   let customHttpService: CustomHttpService;
 
   beforeEach(async () => {
@@ -27,7 +27,7 @@ describe(OxlinConnectionService.name, () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         CustomHttpService,
-        OxlinConnectionService,
+        LinxoConnectConnectionService,
         {
           provide: CONFIG,
           useValue: config,
@@ -37,32 +37,37 @@ describe(OxlinConnectionService.name, () => {
       .useMocker(createMock)
       .compile();
 
-    oxlinConnectionService = await moduleRef.resolve<OxlinConnectionService>(OxlinConnectionService, contextId);
+    linxoConnectConnectionService = await moduleRef.resolve<LinxoConnectConnectionService>(
+      LinxoConnectConnectionService,
+      contextId,
+    );
     customHttpService = await moduleRef.resolve<CustomHttpService>(CustomHttpService, contextId);
   });
 
   it('should be defined', () => {
-    expect(oxlinConnectionService).toBeDefined();
+    expect(linxoConnectConnectionService).toBeDefined();
   });
 
   describe('getConnection', () => {
     it('should get a single connection', async () => {
-      const connectionMock: Pick<OxlinConnection, 'id' | 'status'> = {
+      const connectionMock: Pick<LinxoConnectConnection, 'id' | 'status'> = {
         id: `id-${process.pid}`,
-        status: OxlinConnectionStatus.SUCCESS,
+        status: LinxoConnectConnectionStatus.SUCCESS,
       };
       const spy = jest
         .spyOn(customHttpService, 'get')
-        .mockResolvedValue(Promise.resolve({ data: connectionMock } as unknown as AxiosResponse<OxlinConnection>));
+        .mockResolvedValue(
+          Promise.resolve({ data: connectionMock } as unknown as AxiosResponse<LinxoConnectConnection>),
+        );
 
-      const connection: OxlinConnection = await oxlinConnectionService.getConnection(
+      const connection: LinxoConnectConnection = await linxoConnectConnectionService.getConnection(
         'token',
         `userId-${process.pid}`,
         connectionMock.id,
       );
 
       expect(spy).toHaveBeenCalledWith(
-        config.oxlin.apiBaseUrl,
+        config.linxoConnect.apiBaseUrl,
         `/connections/${connectionMock.id}`,
         undefined,
         'token',
@@ -79,16 +84,16 @@ describe(OxlinConnectionService.name, () => {
 
   describe('getConnectionWithFinalStatus', () => {
     it('should get a single connection when the status is in final step SUCCESS', async () => {
-      const connectionMock: Pick<OxlinConnection, 'id' | 'status'> = {
+      const connectionMock: Pick<LinxoConnectConnection, 'id' | 'status'> = {
         id: `id-${process.pid}`,
-        status: OxlinConnectionStatus.SUCCESS,
+        status: LinxoConnectConnectionStatus.SUCCESS,
       };
 
       const spy = jest
-        .spyOn(oxlinConnectionService, 'getConnection')
-        .mockResolvedValue(connectionMock as unknown as OxlinConnection);
+        .spyOn(linxoConnectConnectionService, 'getConnection')
+        .mockResolvedValue(connectionMock as unknown as LinxoConnectConnection);
 
-      const connection: OxlinConnection = await oxlinConnectionService.getConnectionWithFinalStatus(
+      const connection: LinxoConnectConnection = await linxoConnectConnectionService.getConnectionWithFinalStatus(
         'token',
         `userId-${process.pid}`,
         connectionMock.id,
@@ -101,16 +106,16 @@ describe(OxlinConnectionService.name, () => {
     });
 
     it('should get a single connection when the status is in final step FAILED', async () => {
-      const connectionMock: Pick<OxlinConnection, 'id' | 'status'> = {
+      const connectionMock: Pick<LinxoConnectConnection, 'id' | 'status'> = {
         id: `id-${process.pid}`,
-        status: OxlinConnectionStatus.FAILED,
+        status: LinxoConnectConnectionStatus.FAILED,
       };
 
       const spy = jest
-        .spyOn(oxlinConnectionService, 'getConnection')
-        .mockResolvedValue(connectionMock as unknown as OxlinConnection);
+        .spyOn(linxoConnectConnectionService, 'getConnection')
+        .mockResolvedValue(connectionMock as unknown as LinxoConnectConnection);
 
-      const connection: OxlinConnection = await oxlinConnectionService.getConnectionWithFinalStatus(
+      const connection: LinxoConnectConnection = await linxoConnectConnectionService.getConnectionWithFinalStatus(
         'token',
         `userId-${process.pid}`,
         connectionMock.id,
@@ -123,20 +128,20 @@ describe(OxlinConnectionService.name, () => {
     });
 
     it('should get a single connection UNTIL the status is in final step', async () => {
-      const connectionMock: Pick<OxlinConnection, 'id' | 'status'> = {
+      const connectionMock: Pick<LinxoConnectConnection, 'id' | 'status'> = {
         id: `id-${process.pid}`,
-        status: OxlinConnectionStatus.SUCCESS,
+        status: LinxoConnectConnectionStatus.SUCCESS,
       };
 
       const spy = jest
-        .spyOn(oxlinConnectionService, 'getConnection')
+        .spyOn(linxoConnectConnectionService, 'getConnection')
         .mockResolvedValueOnce({
           ...connectionMock,
-          status: OxlinConnectionStatus.RUNNING,
-        } as unknown as OxlinConnection)
-        .mockResolvedValueOnce(connectionMock as unknown as OxlinConnection);
+          status: LinxoConnectConnectionStatus.RUNNING,
+        } as unknown as LinxoConnectConnection)
+        .mockResolvedValueOnce(connectionMock as unknown as LinxoConnectConnection);
 
-      const connection: OxlinConnection = await oxlinConnectionService.getConnectionWithFinalStatus(
+      const connection: LinxoConnectConnection = await linxoConnectConnectionService.getConnectionWithFinalStatus(
         'token',
         `userId-${process.pid}`,
         connectionMock.id,
@@ -148,17 +153,22 @@ describe(OxlinConnectionService.name, () => {
     });
 
     it('should throw an error if timeout', async () => {
-      const connectionMock: Pick<OxlinConnection, 'id' | 'status'> = {
+      const connectionMock: Pick<LinxoConnectConnection, 'id' | 'status'> = {
         id: `id-${process.pid}`,
-        status: OxlinConnectionStatus.RUNNING,
+        status: LinxoConnectConnectionStatus.RUNNING,
       };
 
       const spy = jest
-        .spyOn(oxlinConnectionService, 'getConnection')
-        .mockResolvedValueOnce(connectionMock as unknown as OxlinConnection);
+        .spyOn(linxoConnectConnectionService, 'getConnection')
+        .mockResolvedValueOnce(connectionMock as unknown as LinxoConnectConnection);
 
       await expect(
-        oxlinConnectionService.getConnectionWithFinalStatus('token', `userId-${process.pid}`, connectionMock.id, 1000),
+        linxoConnectConnectionService.getConnectionWithFinalStatus(
+          'token',
+          `userId-${process.pid}`,
+          connectionMock.id,
+          1000,
+        ),
       ).rejects.toThrowError('Connection final status take too long');
     });
   });

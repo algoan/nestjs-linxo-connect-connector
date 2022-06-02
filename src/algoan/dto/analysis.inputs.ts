@@ -11,12 +11,17 @@ export interface BaseAnalysisUpdateInput {
 }
 
 /**
- * OxlinAccountApiV2
+ * LinxoConnectAccountApiV2
  */
-export interface OxlinAccountApiV2AnalysisUpdateInput<OxlinConnection, OxlinAccount, OxlinTransaction>
-  extends BaseAnalysisUpdateInput {
-  format: AnalysisFormat.OXLIN_ACCOUNT_API_V2;
+export interface LinxoConnectAccountApiV2AnalysisUpdateInput<
+  LinxoConnectConnection,
+  LinxoConnectAccount,
+  LinxoConnectTransaction,
+> extends BaseAnalysisUpdateInput {
+  format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2;
   status?: AnalysisStatus;
   error?: AnalysisError;
-  connections?: (OxlinConnection & { accounts: (OxlinAccount & { transactions: OxlinTransaction[] })[] })[];
+  connections?: (LinxoConnectConnection & {
+    accounts: (LinxoConnectAccount & { transactions: LinxoConnectTransaction[] })[];
+  })[];
 }

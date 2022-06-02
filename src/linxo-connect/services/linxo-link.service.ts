@@ -12,10 +12,10 @@ import { WidgetSessionUrlArgs } from '../dto/widget-session.args';
 import { CustomHttpService } from '../../shared/services/http.service';
 
 /**
- * Service to manage oxlin
+ * Service to manage linxo connect
  */
 @Injectable()
-export class OxlinLinkService {
+export class LinxoConnectLinkService {
   constructor(@Inject(CONFIG) private readonly config: Config, private readonly customHttpService: CustomHttpService) {}
 
   /**
@@ -38,7 +38,7 @@ export class OxlinLinkService {
     const result: AxiosResponse<WidgetSessionObject> = await this.customHttpService.post<
       WidgetSessionObject,
       WidgetSessionInput
-    >(this.config.oxlin.embedBaseUrl, `/widget/widget_session`, input);
+    >(this.config.linxoConnect.embedBaseUrl, `/widget/widget_session`, input);
 
     const widgetSessionParams: WidgetSessionUrlArgs = {
       redirect_uri: callbackUrl,

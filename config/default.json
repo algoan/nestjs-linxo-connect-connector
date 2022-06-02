@@ -4,7 +4,7 @@
     "clientId": "a",
     "clientSecret": "b"
   },
-  "oxlin": {
+  "linxoConnect": {
     "authBaseUrl": "https://sandbox-auth.oxlin.io",
     "apiBaseUrl": "https://sandbox-api.oxlin.io/v2.1",
     "embedBaseUrl": "https://sandbox-embed.oxlin.io/v2.1",

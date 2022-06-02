@@ -5,7 +5,7 @@ import { AggregationDetails, PersonalDetails } from './customer.objects';
  * Mock for `AggregationDetails` object
  */
 export const aggregationDetailsMock: AggregationDetails = {
-  aggregatorName: AggregationDetailsAggregatorName.oxlin,
+  aggregatorName: AggregationDetailsAggregatorName.linxoConnect,
   callbackUrl: 'callbackUrl',
   token: 'token',
   mode: AggregationDetailsMode.iframe,

@@ -7,13 +7,13 @@ import { config } from 'node-config-ts';
 
 import { CONFIG } from '../../config/config.module';
 import { CreateUserInput } from '../dto/create-user.input';
-import { OxlinUser } from '../dto/user.object';
+import { LinxoConnectUser } from '../dto/user.object';
 
 import { CustomHttpService } from '../../shared/services/http.service';
-import { OxlinUserService } from './oxlin-user.service';
+import { LinxoConnectUserService } from './linxo-user.service';
 
-describe(OxlinUserService.name, () => {
-  let oxlinUserService: OxlinUserService;
+describe(LinxoConnectUserService.name, () => {
+  let linxoConnectUserService: LinxoConnectUserService;
   let customHttpService: CustomHttpService;
 
   beforeEach(async () => {
@@ -24,7 +24,7 @@ describe(OxlinUserService.name, () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         CustomHttpService,
-        OxlinUserService,
+        LinxoConnectUserService,
         {
           provide: CONFIG,
           useValue: config,
@@ -34,17 +34,17 @@ describe(OxlinUserService.name, () => {
       .useMocker(createMock)
       .compile();
 
-    oxlinUserService = await moduleRef.resolve<OxlinUserService>(OxlinUserService, contextId);
+    linxoConnectUserService = await moduleRef.resolve<LinxoConnectUserService>(LinxoConnectUserService, contextId);
     customHttpService = await moduleRef.resolve<CustomHttpService>(CustomHttpService, contextId);
   });
 
   it('should be defined', () => {
-    expect(oxlinUserService).toBeDefined();
+    expect(linxoConnectUserService).toBeDefined();
   });
 
   describe('getUser', () => {
     it('should create get a user', async () => {
-      const userMock: OxlinUser = {
+      const userMock: LinxoConnectUser = {
         id: `id-${process.pid}`,
         email: `email-${process.pid}`,
       };
@@ -52,9 +52,9 @@ describe(OxlinUserService.name, () => {
         .spyOn(customHttpService, 'get')
         .mockResolvedValue(Promise.resolve({ data: userMock } as unknown as AxiosResponse<undefined>));
 
-      const user: OxlinUser = await oxlinUserService.getUser('token', userMock.id);
+      const user: LinxoConnectUser = await linxoConnectUserService.getUser('token', userMock.id);
 
-      expect(spy).toHaveBeenCalledWith(config.oxlin.apiBaseUrl, `/users/${userMock.id}`, undefined, 'token');
+      expect(spy).toHaveBeenCalledWith(config.linxoConnect.apiBaseUrl, `/users/${userMock.id}`, undefined, 'token');
       expect(user).toBe(userMock);
     });
   });
@@ -70,9 +70,9 @@ describe(OxlinUserService.name, () => {
         email: 'toto',
         password: 'titi',
       };
-      const userId: string = await oxlinUserService.createNewUser('token', input);
+      const userId: string = await linxoConnectUserService.createNewUser('token', input);
 
-      expect(spy).toHaveBeenCalledWith(config.oxlin.apiBaseUrl, `/users`, input, 'token');
+      expect(spy).toHaveBeenCalledWith(config.linxoConnect.apiBaseUrl, `/users`, input, 'token');
       expect(userId).toBe('1234');
     });
 
@@ -84,7 +84,7 @@ describe(OxlinUserService.name, () => {
         email: 'toto',
         password: 'titi',
       };
-      await expect(oxlinUserService.createNewUser('token', input)).rejects.toThrowErrorMatchingInlineSnapshot(
+      await expect(linxoConnectUserService.createNewUser('token', input)).rejects.toThrowErrorMatchingInlineSnapshot(
         '"Error while creating user"',
       );
     });
@@ -96,9 +96,9 @@ describe(OxlinUserService.name, () => {
         .spyOn(customHttpService, 'delete')
         .mockResolvedValue(Promise.resolve({ data: {} } as unknown as AxiosResponse<undefined>));
 
-      await oxlinUserService.deleteUser('token', `id-${process.pid}`);
+      await linxoConnectUserService.deleteUser('token', `id-${process.pid}`);
 
-      expect(spy).toHaveBeenCalledWith(config.oxlin.apiBaseUrl, `/users/id-${process.pid}`, undefined, 'token');
+      expect(spy).toHaveBeenCalledWith(config.linxoConnect.apiBaseUrl, `/users/id-${process.pid}`, undefined, 'token');
     });
   });
 });

@@ -5,7 +5,7 @@
  *
  * @link https://developers.oxlin.io/reference-accounts-api/#operation/getConnectionByIdUsingGET
  */
-export enum OxlinConnectionStatus {
+export enum LinxoConnectConnectionStatus {
   RUNNING = 'RUNNING',
   SUCCESS = 'SUCCESS',
   PARTIAL_SUCCESS = 'PARTIAL_SUCCESS',
