@@ -77,7 +77,7 @@ describe(LinxoConnectUserService.name, () => {
     });
 
     it('should throw an error if no location header', async () => {
-      const spy = jest
+      jest
         .spyOn(customHttpService, 'post')
         .mockResolvedValue(Promise.resolve({ headers: {} } as unknown as AxiosResponse<undefined>));
       const input: CreateUserInput = {

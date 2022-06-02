@@ -7,8 +7,6 @@ import { AxiosResponse } from 'axios';
 import { config } from 'node-config-ts';
 
 import { CONFIG } from '../../config/config.module';
-import { CreateUserInput } from '../dto/create-user.input';
-import { LinxoConnectUser } from '../dto/user.object';
 
 import { CustomHttpService } from '../../shared/services/http.service';
 import { LinxoConnectConnection } from '../dto/connection.object';
@@ -158,7 +156,7 @@ describe(LinxoConnectConnectionService.name, () => {
         status: LinxoConnectConnectionStatus.RUNNING,
       };
 
-      const spy = jest
+      jest
         .spyOn(linxoConnectConnectionService, 'getConnection')
         .mockResolvedValueOnce(connectionMock as unknown as LinxoConnectConnection);
 

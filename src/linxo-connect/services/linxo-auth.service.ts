@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention, camelcase */
-import { Inject, Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import { Config } from 'node-config-ts';
 
