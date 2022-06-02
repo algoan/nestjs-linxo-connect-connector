@@ -78,7 +78,7 @@ Refers to the [`bank_details_required`](https://developers.algoan.com/public/doc
 - `config/`: stores all configurations for the application. It uses [node-config-ts](https://github.com/tusharmath/node-config-ts) to generate a type definition of the `default.json` file.
 - `src/config/`: Simple NestJs module to inject configuration in services
 - `src/algoan/`: Algoan module getting your service accounts. It uses the [@algoan/rest](https://github.com/algoan/rest-nodejs) library.
-- `src/oxlin/`: Oxlin module to manage Oxlin API.
+- `src/linxo-connect/`: Linxo Connect module to manage Linxo Connect API.
 - `src/hooks/`: Entry point for your [RestHook](https://developers.algoan.com/public/docs/algoan_documentation/resthooks_and_events/resthooks.html) called by Algoan. It handles [events](https://developers.algoan.com/public/docs/algoan_documentation/resthooks_and_events/event_list.html) you've subscribed to.
 - `test/`: contains e2e tests.
 
@@ -123,7 +123,7 @@ $ npm install
 
 ### How to test locally
 
-To test locally the Oxlin Link process, a simple `index.html` file is rendered. To use it:
+To test locally the Linxo Connect Link process, a simple `index.html` file is rendered. To use it:
 
 Before testing
 - The client config should be updated in `service-accounts.config` in  `./json-server/db.json'.
@@ -135,8 +135,8 @@ Run Test
 
 ![index_page](public/index-page.png)
 
-- With the two provided buttons, you are able to test the two available Oxlin processes:
-  - Embedded: Click on the button "Open embedded Oxlin Link". It will call a `GET /iframe` API which simulates a webhook call to your connector, tries to fetch an iframe URL and display an iframe with this URL. At the end of the Oxlin Link process, a `GET /callback?code=...` will be called. It will simulated the `bank_reader_details` webhook event to the connector. Moreover, the iframe is remove from the interface.
+- With the two provided buttons, you are able to test the two available Linxo Connect processes:
+  - Embedded: Click on the button "Open embedded Linxo Connect Link". It will call a `GET /iframe` API which simulates a webhook call to your connector, tries to fetch an iframe URL and display an iframe with this URL. At the end of the Linxo Connect Link process, a `GET /callback?code=...` will be called. It will simulated the `bank_reader_details` webhook event to the connector. Moreover, the iframe is remove from the interface.
 
 ## Test
 

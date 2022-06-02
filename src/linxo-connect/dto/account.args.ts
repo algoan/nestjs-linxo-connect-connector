@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention, camelcase */
 
-import { OxlinAccountStatus, OxlinAccountType, OxlinAccountUsage } from './account.enums';
+import { LinxoConnectAccountStatus, LinxoConnectAccountType, LinxoConnectAccountUsage } from './account.enums';
 
 /**
  * Args to get accounts
@@ -8,12 +8,12 @@ import { OxlinAccountStatus, OxlinAccountType, OxlinAccountUsage } from './accou
  * @link https://developers.oxlin.io/reference-accounts-api/#operation/getAccounts
  */
 export interface AccountArgs {
-  type?: OxlinAccountType;
+  type?: LinxoConnectAccountType;
   q?: string;
   page: number;
   limit: number;
-  status?: OxlinAccountStatus;
+  status?: LinxoConnectAccountStatus;
   connection_id: string;
-  usage?: OxlinAccountUsage;
+  usage?: LinxoConnectAccountUsage;
   sort?: string;
 }

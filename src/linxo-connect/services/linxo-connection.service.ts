@@ -6,9 +6,9 @@ import { Config } from 'node-config-ts';
 import { delay } from '../../shared/utils/common.utils';
 import { CONFIG } from '../../config/config.module';
 
-import { OxlinConnection } from '../dto/connection.object';
+import { LinxoConnectConnection } from '../dto/connection.object';
 import { CustomHttpService } from '../../shared/services/http.service';
-import { OxlinConnectionStatus } from '../dto/connection.enums';
+import { LinxoConnectConnectionStatus } from '../dto/connection.enums';
 
 const expFactor: number = 2;
 
@@ -16,7 +16,7 @@ const expFactor: number = 2;
  * Service to manage connection
  */
 @Injectable()
-export class OxlinConnectionService {
+export class LinxoConnectConnectionService {
   constructor(@Inject(CONFIG) private readonly config: Config, private readonly customHttpService: CustomHttpService) {}
 
   /**
@@ -27,22 +27,26 @@ export class OxlinConnectionService {
     userId: string,
     connectionId: string,
     timeoutInMS: number,
-  ): Promise<OxlinConnection> {
+  ): Promise<LinxoConnectConnection> {
     const startTimeInMS: number = Date.now();
 
     /**
      * Try To Get Final Connection in next interval
      */
-    const tryToGetFinalConnection = async (nextIntervalInMS: number): Promise<OxlinConnection> => {
+    const tryToGetFinalConnection = async (nextIntervalInMS: number): Promise<LinxoConnectConnection> => {
       const expectedDurationInMS: number = Date.now() - startTimeInMS + nextIntervalInMS;
       if (expectedDurationInMS > timeoutInMS) {
         throw new Error('Connection final status take too long');
       }
 
-      const oxlinConnection: OxlinConnection = await this.getConnection(userAccessToken, userId, connectionId);
+      const linxoConnectConnection: LinxoConnectConnection = await this.getConnection(
+        userAccessToken,
+        userId,
+        connectionId,
+      );
 
-      if (oxlinConnection.status !== OxlinConnectionStatus.RUNNING) {
-        return oxlinConnection;
+      if (linxoConnectConnection.status !== LinxoConnectConnectionStatus.RUNNING) {
+        return linxoConnectConnection;
       }
 
       await delay(nextIntervalInMS);
@@ -59,9 +63,13 @@ export class OxlinConnectionService {
    *
    * @link https://developers.oxlin.io/reference-accounts-api/#operation/getConnectionByIdUsingGET
    */
-  public async getConnection(userAccessToken: string, userId: string, connectionId: string): Promise<OxlinConnection> {
-    const response: AxiosResponse<OxlinConnection> = await this.customHttpService.get<OxlinConnection>(
-      this.config.oxlin.apiBaseUrl,
+  public async getConnection(
+    userAccessToken: string,
+    userId: string,
+    connectionId: string,
+  ): Promise<LinxoConnectConnection> {
+    const response: AxiosResponse<LinxoConnectConnection> = await this.customHttpService.get<LinxoConnectConnection>(
+      this.config.linxoConnect.apiBaseUrl,
       `/connections/${connectionId}`,
       undefined,
       userAccessToken,

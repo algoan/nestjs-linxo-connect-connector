@@ -15,10 +15,10 @@ import { AccessTokenInput } from '../dto/access-token.input';
 import { AuthProviders, GrantType } from '../dto/grant-type.enum';
 
 import { AccessTokenObject } from '../dto/access-token.object';
-import { OxlinAuthService } from './oxlin-auth.service';
+import { LinxoConnectAuthService } from './linxo-auth.service';
 
-describe(OxlinAuthService.name, () => {
-  let oxlinAuthService: OxlinAuthService;
+describe(LinxoConnectAuthService.name, () => {
+  let linxoConnectAuthService: LinxoConnectAuthService;
   let customHttpService: CustomHttpService;
 
   beforeEach(async () => {
@@ -29,7 +29,7 @@ describe(OxlinAuthService.name, () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       imports: [SharedModule],
       providers: [
-        OxlinAuthService,
+        LinxoConnectAuthService,
         {
           provide: CONFIG,
           useValue: config,
@@ -39,12 +39,12 @@ describe(OxlinAuthService.name, () => {
       .useMocker(createMock)
       .compile();
 
-    oxlinAuthService = await moduleRef.resolve<OxlinAuthService>(OxlinAuthService, contextId);
+    linxoConnectAuthService = await moduleRef.resolve<LinxoConnectAuthService>(LinxoConnectAuthService, contextId);
     customHttpService = await moduleRef.resolve<CustomHttpService>(CustomHttpService, contextId);
   });
 
   it('should be defined', () => {
-    expect(oxlinAuthService).toBeDefined();
+    expect(linxoConnectAuthService).toBeDefined();
   });
 
   describe('getClientToken', () => {
@@ -57,7 +57,7 @@ describe(OxlinAuthService.name, () => {
     });
 
     it('should request a client token', async () => {
-      const url: string = `${config.oxlin.authBaseUrl}`;
+      const url: string = `${config.linxoConnect.authBaseUrl}`;
       const input: AccessTokenInput = {
         provider: AuthProviders.LINXO_CONNECT,
         client_id: serviceAccountConfigMock.clientId,
@@ -66,7 +66,7 @@ describe(OxlinAuthService.name, () => {
         scope: 'users_create',
       };
 
-      const token: string = await oxlinAuthService.geClientToken(
+      const token: string = await linxoConnectAuthService.geClientToken(
         serviceAccountConfigMock.clientId,
         serviceAccountConfigMock.clientSecret,
       );
@@ -86,7 +86,7 @@ describe(OxlinAuthService.name, () => {
     });
 
     it('should request a user token', async () => {
-      const url: string = `${config.oxlin.authBaseUrl}`;
+      const url: string = `${config.linxoConnect.authBaseUrl}`;
       const input: AccessTokenInput = {
         provider: AuthProviders.LINXO_CONNECT,
         client_id: serviceAccountConfigMock.clientId,
@@ -98,7 +98,7 @@ describe(OxlinAuthService.name, () => {
         password: 'thisIsAStringPassword',
       };
 
-      const token: string = await oxlinAuthService.getUserToken(
+      const token: string = await linxoConnectAuthService.getUserToken(
         serviceAccountConfigMock.clientId,
         serviceAccountConfigMock.clientSecret,
         'email@algoan.com',

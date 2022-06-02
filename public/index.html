@@ -45,12 +45,12 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col">
-          <img class="rounded mx-auto d-block py-5" src="../oxlin_algoan.png" width="500" alt="Algoan Oxlin Logo" />
+          <img class="rounded mx-auto d-block py-5" src="../linxo-connect_algoan.png" width="500" alt="Algoan Linxo Connect Logo" />
         </div>
       </div>
       <div class="row">
-        <button role="button" class="btn btn-primary redirect-button" id="oxlin-iframe-button">
-          Open embedded Oxlin Link
+        <button role="button" class="btn btn-primary redirect-button" id="linxo-connect-iframe-button">
+          Open embedded Linxo Connect Link
         </button>
       </div>
       <div class="row justify-content-center" id="iframe-container"></div>
@@ -118,7 +118,7 @@
      * addHandlerToIframeButton
      */
     function addHandlerToIframeButton() {
-      document.getElementById('oxlin-iframe-button').onclick = function addIframe() {
+      document.getElementById('linxo-connec-iframe-button').onclick = function addIframe() {
         var req = new XMLHttpRequest();
         req.onload = () => setIframe(req.responseText);
         req.open("GET", "/iframe");

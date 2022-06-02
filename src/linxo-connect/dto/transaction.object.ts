@@ -1,20 +1,24 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { OxlinTransactionOrigin, OxlinTransactionStatus, OxlinTransactionType } from './transaction.enums';
+import {
+  LinxoConnectTransactionOrigin,
+  LinxoConnectTransactionStatus,
+  LinxoConnectTransactionType,
+} from './transaction.enums';
 
 /**
- * Oxlin Transaction
+ * LinxoConnect Transaction
  *
  * @link https://developers.oxlin.io/reference-accounts-api/#operation/getTransactions
  */
-export interface OxlinTransaction {
+export interface LinxoConnectTransaction {
   id: string;
   account_id: string;
   amount: number;
   original_trx_id: string;
   check_number: string;
-  type: OxlinTransactionType;
-  origin: OxlinTransactionOrigin;
+  type: LinxoConnectTransactionType;
+  origin: LinxoConnectTransactionOrigin;
   category_id: string;
   date: number;
   import_date: number;
@@ -26,5 +30,5 @@ export interface OxlinTransaction {
   source: unknown;
   currency: string;
   remittance_information: unknown[];
-  status: OxlinTransactionStatus;
+  status: LinxoConnectTransactionStatus;
 }

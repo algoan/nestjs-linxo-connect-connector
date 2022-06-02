@@ -9,12 +9,12 @@ import { config } from 'node-config-ts';
 import { CONFIG } from '../../config/config.module';
 
 import { CustomHttpService } from '../../shared/services/http.service';
-import { OxlinAccount } from '../dto/account.object';
-import { OxlinTransaction } from '../dto/transaction.object';
-import { OxlinAccountService } from './oxlin-account.service';
+import { LinxoConnectAccount } from '../dto/account.object';
+import { LinxoConnectTransaction } from '../dto/transaction.object';
+import { LinxoConnectAccountService } from './linxo-account.service';
 
-describe(OxlinAccountService.name, () => {
-  let oxlinAccountService: OxlinAccountService;
+describe(LinxoConnectAccountService.name, () => {
+  let linxoConnectAccountService: LinxoConnectAccountService;
   let customHttpService: CustomHttpService;
 
   beforeEach(async () => {
@@ -25,7 +25,7 @@ describe(OxlinAccountService.name, () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         CustomHttpService,
-        OxlinAccountService,
+        LinxoConnectAccountService,
         {
           provide: CONFIG,
           useValue: config,
@@ -35,26 +35,32 @@ describe(OxlinAccountService.name, () => {
       .useMocker(createMock)
       .compile();
 
-    oxlinAccountService = await moduleRef.resolve<OxlinAccountService>(OxlinAccountService, contextId);
+    linxoConnectAccountService = await moduleRef.resolve<LinxoConnectAccountService>(
+      LinxoConnectAccountService,
+      contextId,
+    );
     customHttpService = await moduleRef.resolve<CustomHttpService>(CustomHttpService, contextId);
   });
 
   it('should be defined', () => {
-    expect(oxlinAccountService).toBeDefined();
+    expect(linxoConnectAccountService).toBeDefined();
   });
 
   describe('getAllAccountsForConnection', () => {
     it('should get all accounts for a connection', async () => {
-      const acccountsMock: OxlinAccount[] = new Array(99).fill({ id: 'id' });
+      const acccountsMock: LinxoConnectAccount[] = new Array(99).fill({ id: 'id' });
 
       const spy = jest
         .spyOn(customHttpService, 'get')
-        .mockResolvedValue(Promise.resolve({ data: acccountsMock } as unknown as AxiosResponse<OxlinAccount[]>));
+        .mockResolvedValue(Promise.resolve({ data: acccountsMock } as unknown as AxiosResponse<LinxoConnectAccount[]>));
 
-      const acccounts: OxlinAccount[] = await oxlinAccountService.getAllAccountsForConnection('token', `connectionId`);
+      const acccounts: LinxoConnectAccount[] = await linxoConnectAccountService.getAllAccountsForConnection(
+        'token',
+        `connectionId`,
+      );
 
       expect(spy).toHaveBeenCalledWith(
-        config.oxlin.apiBaseUrl,
+        config.linxoConnect.apiBaseUrl,
         `/accounts`,
         {
           connection_id: 'connectionId',
@@ -67,17 +73,24 @@ describe(OxlinAccountService.name, () => {
     });
 
     it('should get all accounts for a connection, even if there is mulitple page', async () => {
-      const acccountsMock: OxlinAccount[] = new Array(100).fill({ id: 'id' });
+      const acccountsMock: LinxoConnectAccount[] = new Array(100).fill({ id: 'id' });
 
       const spy = jest
         .spyOn(customHttpService, 'get')
-        .mockResolvedValueOnce(Promise.resolve({ data: acccountsMock } as unknown as AxiosResponse<OxlinAccount[]>))
-        .mockResolvedValueOnce(Promise.resolve({ data: acccountsMock } as unknown as AxiosResponse<OxlinAccount[]>))
         .mockResolvedValueOnce(
-          Promise.resolve({ data: acccountsMock.slice(0, 99) } as unknown as AxiosResponse<OxlinAccount[]>),
+          Promise.resolve({ data: acccountsMock } as unknown as AxiosResponse<LinxoConnectAccount[]>),
+        )
+        .mockResolvedValueOnce(
+          Promise.resolve({ data: acccountsMock } as unknown as AxiosResponse<LinxoConnectAccount[]>),
+        )
+        .mockResolvedValueOnce(
+          Promise.resolve({ data: acccountsMock.slice(0, 99) } as unknown as AxiosResponse<LinxoConnectAccount[]>),
         );
 
-      const acccounts: OxlinAccount[] = await oxlinAccountService.getAllAccountsForConnection('token', `connectionId`);
+      const acccounts: LinxoConnectAccount[] = await linxoConnectAccountService.getAllAccountsForConnection(
+        'token',
+        `connectionId`,
+      );
 
       expect(spy).toHaveBeenCalledTimes(3);
       expect(acccounts.length).toEqual(299);
@@ -86,19 +99,21 @@ describe(OxlinAccountService.name, () => {
 
   describe('getAllTransactionsForAccount', () => {
     it('should get all transactions for an account', async () => {
-      const transactionsMock: OxlinTransaction[] = new Array(99).fill({ id: 'id' });
+      const transactionsMock: LinxoConnectTransaction[] = new Array(99).fill({ id: 'id' });
 
       const spy = jest
         .spyOn(customHttpService, 'get')
-        .mockResolvedValue(Promise.resolve({ data: transactionsMock } as unknown as AxiosResponse<OxlinTransaction[]>));
+        .mockResolvedValue(
+          Promise.resolve({ data: transactionsMock } as unknown as AxiosResponse<LinxoConnectTransaction[]>),
+        );
 
-      const transactions: OxlinTransaction[] = await oxlinAccountService.getAllTransactionsForAccount(
+      const transactions: LinxoConnectTransaction[] = await linxoConnectAccountService.getAllTransactionsForAccount(
         'token',
         `accountId`,
       );
 
       expect(spy).toHaveBeenCalledWith(
-        config.oxlin.apiBaseUrl,
+        config.linxoConnect.apiBaseUrl,
         `/transactions`,
         {
           account_id: 'accountId',
@@ -111,21 +126,23 @@ describe(OxlinAccountService.name, () => {
     });
 
     it('should get all transactions for an account, even if there is mulitple page', async () => {
-      const transactionsMock: OxlinTransaction[] = new Array(500).fill({ id: 'id' });
+      const transactionsMock: LinxoConnectTransaction[] = new Array(500).fill({ id: 'id' });
 
       const spy = jest
         .spyOn(customHttpService, 'get')
         .mockResolvedValueOnce(
-          Promise.resolve({ data: transactionsMock } as unknown as AxiosResponse<OxlinTransaction[]>),
+          Promise.resolve({ data: transactionsMock } as unknown as AxiosResponse<LinxoConnectTransaction[]>),
         )
         .mockResolvedValueOnce(
-          Promise.resolve({ data: transactionsMock } as unknown as AxiosResponse<OxlinTransaction[]>),
+          Promise.resolve({ data: transactionsMock } as unknown as AxiosResponse<LinxoConnectTransaction[]>),
         )
         .mockResolvedValueOnce(
-          Promise.resolve({ data: transactionsMock.slice(0, 499) } as unknown as AxiosResponse<OxlinTransaction[]>),
+          Promise.resolve({ data: transactionsMock.slice(0, 499) } as unknown as AxiosResponse<
+            LinxoConnectTransaction[]
+          >),
         );
 
-      const transactions: OxlinTransaction[] = await oxlinAccountService.getAllTransactionsForAccount(
+      const transactions: LinxoConnectTransaction[] = await linxoConnectAccountService.getAllTransactionsForAccount(
         'token',
         `accountId`,
       );
@@ -137,16 +154,16 @@ describe(OxlinAccountService.name, () => {
 
   describe('getAllTransactionsForAllAccounts', () => {
     it('should get all transactions for all accounts', async () => {
-      const transactionsMock: OxlinTransaction[] = new Array(99).fill({ id: 'id' });
+      const transactionsMock: LinxoConnectTransaction[] = new Array(99).fill({ id: 'id' });
 
       const spy = jest
-        .spyOn(oxlinAccountService, 'getAllTransactionsForAccount')
-        .mockResolvedValue(transactionsMock as unknown as OxlinTransaction[]);
+        .spyOn(linxoConnectAccountService, 'getAllTransactionsForAccount')
+        .mockResolvedValue(transactionsMock as unknown as LinxoConnectTransaction[]);
 
-      const transactions: OxlinTransaction[] = await oxlinAccountService.getAllTransactionsForAllAccounts('token', [
-        `accountId-1`,
-        `accountId-2`,
-      ]);
+      const transactions: LinxoConnectTransaction[] = await linxoConnectAccountService.getAllTransactionsForAllAccounts(
+        'token',
+        [`accountId-1`, `accountId-2`],
+      );
 
       expect(spy).toHaveBeenCalledTimes(2);
       expect(transactions.length).toBe(transactionsMock.length * 2);

@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { OxlinConnectionStatus } from './connection.enums';
+import { LinxoConnectConnectionStatus } from './connection.enums';
 
 /**
- * Oxlin Connection
+ * LinxoConnect Connection
  *
  * @link https://developers.oxlin.io/reference-accounts-api/#operation/getConnectionByIdUsingGET
  */
-export interface OxlinConnection {
+export interface LinxoConnectConnection {
   id: string;
   auto_sync: boolean;
   consent_per_account: boolean;
   creation_date: number; // timestamp in sec
   name: string;
-  status: OxlinConnectionStatus;
+  status: LinxoConnectConnectionStatus;
   channels: unknown[];
   constraints: unknown;
   logo_url: string;

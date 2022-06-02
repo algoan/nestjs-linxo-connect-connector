@@ -4,7 +4,7 @@ import { HttpModule } from '@nestjs/axios';
 import { CustomHttpService } from './services/http.service';
 
 /**
- * Oxlin module
+ * LinxoConnect module
  */
 @Module({
   imports: [HttpModule],

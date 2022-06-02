@@ -1,39 +1,50 @@
 /* eslint-disable @typescript-eslint/naming-convention,camelcase */
 
-import { OxlinAccountApiV2AnalysisUpdateInput } from 'src/algoan/dto/analysis.inputs';
-import { OxlinConnection } from 'src/oxlin/dto/connection.object';
-import { oxlinAccountsMock } from '../../oxlin/dto/account.object.mock';
-import { oxlinTransactionsMock } from '../../oxlin/dto/transaction.object.mock';
-import { oxlinConnectionMock } from '../../oxlin/dto/connection.object.mock';
-import { OxlinAccount } from '../../oxlin/dto/account.object';
-import { OxlinTransaction } from '../../oxlin/dto/transaction.object';
+import { LinxoConnectAccountApiV2AnalysisUpdateInput } from 'src/algoan/dto/analysis.inputs';
+import { LinxoConnectConnection } from 'src/linxo-connect/dto/connection.object';
+import { linxoConnectAccountsMock } from '../../linxo-connect/dto/account.object.mock';
+import { linxoConnectTransactionsMock } from '../../linxo-connect/dto/transaction.object.mock';
+import { linxoConnectConnectionMock } from '../../linxo-connect/dto/connection.object.mock';
+import { LinxoConnectAccount } from '../../linxo-connect/dto/account.object';
+import { LinxoConnectTransaction } from '../../linxo-connect/dto/transaction.object';
 import { AnalysisFormat, AnalysisStatus, ErrorCodes } from '../../algoan/dto/analysis.enum';
-import { mapOxlinDataToAlgoanAnalysis, mapOxlinErrorToAlgoanAnalysis } from './analysis.mapper';
+import { mapLinxoConnectDataToAlgoanAnalysis, mapLinxoConnectErrorToAlgoanAnalysis } from './analysis.mapper';
 
 describe('AnalysisMapper', () => {
-  describe('mapOxlinDataToAlgoanAnalysis', () => {
+  describe('mapLinxoConnectDataToAlgoanAnalysis', () => {
     it('should return an algoan analysis with 2 account', async () => {
       // We map it
-      const analysisUpdate: OxlinAccountApiV2AnalysisUpdateInput<OxlinConnection, OxlinAccount, OxlinTransaction> =
-        mapOxlinDataToAlgoanAnalysis(oxlinConnectionMock, oxlinAccountsMock, oxlinTransactionsMock);
+      const analysisUpdate: LinxoConnectAccountApiV2AnalysisUpdateInput<
+        LinxoConnectConnection,
+        LinxoConnectAccount,
+        LinxoConnectTransaction
+      > = mapLinxoConnectDataToAlgoanAnalysis(
+        linxoConnectConnectionMock,
+        linxoConnectAccountsMock,
+        linxoConnectTransactionsMock,
+      );
 
       // We get an algoan transaction input
       expect(analysisUpdate).toEqual<
-        OxlinAccountApiV2AnalysisUpdateInput<OxlinConnection, OxlinAccount, OxlinTransaction>
+        LinxoConnectAccountApiV2AnalysisUpdateInput<
+          LinxoConnectConnection,
+          LinxoConnectAccount,
+          LinxoConnectTransaction
+        >
       >({
         status: AnalysisStatus.IN_PROGRESS,
         format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
         connections: [
           {
-            ...oxlinConnectionMock,
+            ...linxoConnectConnectionMock,
             accounts: [
               {
-                ...oxlinAccountsMock[0],
-                transactions: [oxlinTransactionsMock[0]],
+                ...linxoConnectAccountsMock[0],
+                transactions: [linxoConnectTransactionsMock[0]],
               },
               {
-                ...oxlinAccountsMock[1],
-                transactions: [oxlinTransactionsMock[1]],
+                ...linxoConnectAccountsMock[1],
+                transactions: [linxoConnectTransactionsMock[1]],
               },
             ],
           },
@@ -42,15 +53,19 @@ describe('AnalysisMapper', () => {
     });
   });
 
-  describe('mapOxlinErrorToAlgoanAnalysis', () => {
+  describe('mapLinxoConnectErrorToAlgoanAnalysis', () => {
     it('should return an algoan analysis error', async () => {
       // We map it
-      const analysisUpdate: OxlinAccountApiV2AnalysisUpdateInput<OxlinConnection, unknown, unknown> =
-        mapOxlinErrorToAlgoanAnalysis('There is an error');
+      const analysisUpdate: LinxoConnectAccountApiV2AnalysisUpdateInput<LinxoConnectConnection, unknown, unknown> =
+        mapLinxoConnectErrorToAlgoanAnalysis('There is an error');
 
       // We get an algoan transaction input
       expect(analysisUpdate).toEqual<
-        OxlinAccountApiV2AnalysisUpdateInput<OxlinConnection, OxlinAccount, OxlinTransaction>
+        LinxoConnectAccountApiV2AnalysisUpdateInput<
+          LinxoConnectConnection,
+          LinxoConnectAccount,
+          LinxoConnectTransaction
+        >
       >({
         format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
         status: AnalysisStatus.ERROR,
@@ -64,12 +79,16 @@ describe('AnalysisMapper', () => {
 
     it('should return an algoan analysis error AND a connection', async () => {
       // We map it
-      const analysisUpdate: OxlinAccountApiV2AnalysisUpdateInput<OxlinConnection, unknown, unknown> =
-        mapOxlinErrorToAlgoanAnalysis('There is an error', oxlinConnectionMock);
+      const analysisUpdate: LinxoConnectAccountApiV2AnalysisUpdateInput<LinxoConnectConnection, unknown, unknown> =
+        mapLinxoConnectErrorToAlgoanAnalysis('There is an error', linxoConnectConnectionMock);
 
       // We get an algoan transaction input
       expect(analysisUpdate).toEqual<
-        OxlinAccountApiV2AnalysisUpdateInput<OxlinConnection, OxlinAccount, OxlinTransaction>
+        LinxoConnectAccountApiV2AnalysisUpdateInput<
+          LinxoConnectConnection,
+          LinxoConnectAccount,
+          LinxoConnectTransaction
+        >
       >({
         format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
         status: AnalysisStatus.ERROR,
@@ -79,7 +98,7 @@ describe('AnalysisMapper', () => {
         },
         connections: [
           {
-            ...oxlinConnectionMock,
+            ...linxoConnectConnectionMock,
             accounts: [],
           },
         ],

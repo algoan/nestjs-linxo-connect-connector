@@ -4,16 +4,16 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Config } from 'node-config-ts';
 
 import { AlgoanAnalysisService } from '../../algoan/services/algoan-analysis.service';
-import { OxlinConnection } from '../../oxlin/dto/connection.object';
-import { OxlinConnectionService } from '../../oxlin/services/oxlin-connection.service';
-import { OxlinConnectionStatus } from '../../oxlin/dto/connection.enums';
-import { OxlinAccount } from '../../oxlin/dto/account.object';
-import { OxlinAccountService } from '../../oxlin/services/oxlin-account.service';
-import { OxlinTransaction } from '../../oxlin/dto/transaction.object';
+import { LinxoConnectConnection } from '../../linxo-connect/dto/connection.object';
+import { LinxoConnectConnectionService } from '../../linxo-connect/services/linxo-connection.service';
+import { LinxoConnectConnectionStatus } from '../../linxo-connect/dto/connection.enums';
+import { LinxoConnectAccount } from '../../linxo-connect/dto/account.object';
+import { LinxoConnectAccountService } from '../../linxo-connect/services/linxo-account.service';
+import { LinxoConnectTransaction } from '../../linxo-connect/dto/transaction.object';
 import { AggregationDetailsAggregatorName, AggregationDetailsMode } from '../../algoan/dto/customer.enums';
-import { OxlinAuthService } from '../../oxlin/services/oxlin-auth.service';
-import { OxlinUserService } from '../../oxlin/services/oxlin-user.service';
-import { OxlinLinkService } from '../../oxlin/services/oxlin-link.service';
+import { LinxoConnectAuthService } from '../../linxo-connect/services/linxo-auth.service';
+import { LinxoConnectUserService } from '../../linxo-connect/services/linxo-user.service';
+import { LinxoConnectLinkService } from '../../linxo-connect/services/linxo-link.service';
 import { assertsTypeValidation } from '../../shared/utils/common.utils';
 import { Customer } from '../../algoan/dto/customer.objects';
 import { AlgoanCustomerService } from '../../algoan/services/algoan-customer.service';
@@ -23,7 +23,7 @@ import { AlgoanHttpService } from '../../algoan/services/algoan-http.service';
 
 import { AggregatorLinkRequiredDTO } from '../dto/aggregator-link-required-payload.dto';
 import { BankDetailsRequiredDTO } from '../dto/bank-details-required-payload.dto';
-import { mapOxlinDataToAlgoanAnalysis, mapOxlinErrorToAlgoanAnalysis } from '../mappers/analysis.mapper';
+import { mapLinxoConnectDataToAlgoanAnalysis, mapLinxoConnectErrorToAlgoanAnalysis } from '../mappers/analysis.mapper';
 
 /**
  * Hook service
@@ -41,11 +41,11 @@ export class HooksService {
     private readonly algoanCustomerService: AlgoanCustomerService,
     private readonly algoanAnalysisService: AlgoanAnalysisService,
     private readonly serviceAccount: ServiceAccount,
-    private readonly oxlinAuthService: OxlinAuthService,
-    private readonly oxlinUserService: OxlinUserService,
-    private readonly oxlinLinkService: OxlinLinkService,
-    private readonly oxlinConnectionService: OxlinConnectionService,
-    private readonly oxlinAccountService: OxlinAccountService,
+    private readonly linxoConnectAuthService: LinxoConnectAuthService,
+    private readonly linxoConnectUserService: LinxoConnectUserService,
+    private readonly linxoConnectLinkService: LinxoConnectLinkService,
+    private readonly linxoConnectConnectionService: LinxoConnectConnectionService,
+    private readonly linxoConnectAccountService: LinxoConnectAccountService,
   ) {}
 
   /**
@@ -58,7 +58,7 @@ export class HooksService {
     // Get user information and client config
     const customer: Customer = await this.algoanCustomerService.getCustomerById(payload.customerId);
 
-    // Ignore query params since Oxlin does not accept variables
+    // Ignore query params since LinxoConnect does not accept variables
     const callbackUrl: string | undefined = customer.aggregationDetails.callbackUrl?.split(/[?#]/)[0];
     const clientConfig: ClientConfig | undefined = this.serviceAccount.config as ClientConfig | undefined;
 
@@ -70,41 +70,41 @@ export class HooksService {
     }
     assertsTypeValidation(ClientConfig, clientConfig);
 
-    // Get the oxlin user if saved on customer
-    let oxlinUserId: string | undefined = customer.aggregationDetails.userId;
+    // Get the linxoConnect user if saved on customer
+    let linxoConnectUserId: string | undefined = customer.aggregationDetails.userId;
     let userAccessToken: string | undefined;
-    if (oxlinUserId !== undefined) {
+    if (linxoConnectUserId !== undefined) {
       try {
         // Get user token
-        userAccessToken = await this.oxlinAuthService.getUserToken(
+        userAccessToken = await this.linxoConnectAuthService.getUserToken(
           clientConfig.clientId,
           clientConfig.clientSecret,
           this.algoanCustomerService.getDefaultEmail(customer.id),
           this.algoanCustomerService.getDefaultPassword(customer.id),
         );
-        await this.oxlinUserService.getUser(userAccessToken, oxlinUserId);
+        await this.linxoConnectUserService.getUser(userAccessToken, linxoConnectUserId);
       } catch (e) {
         // the user doesn't exist anymore
         userAccessToken = undefined;
-        oxlinUserId = undefined;
+        linxoConnectUserId = undefined;
       }
     }
 
     // else create a new user
-    if (oxlinUserId === undefined || userAccessToken === undefined) {
+    if (linxoConnectUserId === undefined || userAccessToken === undefined) {
       // Get client access token
-      const clientAccessToken: string = await this.oxlinAuthService.geClientToken(
+      const clientAccessToken: string = await this.linxoConnectAuthService.geClientToken(
         clientConfig.clientId,
         clientConfig.clientSecret,
       );
 
-      oxlinUserId = await this.oxlinUserService.createNewUser(clientAccessToken, {
+      linxoConnectUserId = await this.linxoConnectUserService.createNewUser(clientAccessToken, {
         email: this.algoanCustomerService.getDefaultEmail(customer.id),
         password: this.algoanCustomerService.getDefaultPassword(customer.id),
       });
 
       // Get user token
-      userAccessToken = await this.oxlinAuthService.getUserToken(
+      userAccessToken = await this.linxoConnectAuthService.getUserToken(
         clientConfig.clientId,
         clientConfig.clientSecret,
         this.algoanCustomerService.getDefaultEmail(customer.id),
@@ -113,7 +113,7 @@ export class HooksService {
     }
 
     // Get iFrame Url
-    const iframeUrl: string = await this.oxlinLinkService.getIframeUrl(
+    const iframeUrl: string = await this.linxoConnectLinkService.getIframeUrl(
       userAccessToken,
       clientConfig.clientId,
       clientConfig.clientSecret,
@@ -125,9 +125,9 @@ export class HooksService {
     await this.algoanCustomerService.updateCustomer(payload.customerId, {
       aggregationDetails: {
         iframeUrl,
-        userId: oxlinUserId,
+        userId: linxoConnectUserId,
         mode: AggregationDetailsMode.iframe,
-        aggregatorName: AggregationDetailsAggregatorName.oxlin,
+        aggregatorName: AggregationDetailsAggregatorName.linxoConnect,
       },
     });
 
@@ -157,36 +157,36 @@ export class HooksService {
       }
       assertsTypeValidation(ClientConfig, clientConfig);
 
-      // Get the oxlin user saved on customer
-      const oxlinUserId: string | undefined = customer.aggregationDetails.userId;
-      if (oxlinUserId === undefined) {
-        throw new Error("Oxlin user id is not defined, can't connect to Oxlin");
+      // Get the linxoConnect user saved on customer
+      const linxoConnectUserId: string | undefined = customer.aggregationDetails.userId;
+      if (linxoConnectUserId === undefined) {
+        throw new Error("LinxoConnect user id is not defined, can't connect to LinxoConnect");
       }
 
       // Get the user access token
-      const userAccessToken: string = await this.oxlinAuthService.getUserToken(
+      const userAccessToken: string = await this.linxoConnectAuthService.getUserToken(
         clientConfig.clientId,
         clientConfig.clientSecret,
         this.algoanCustomerService.getDefaultEmail(customer.id),
         this.algoanCustomerService.getDefaultPassword(customer.id),
       );
       // test if the user exist
-      await this.oxlinUserService.getUser(userAccessToken, oxlinUserId);
+      await this.linxoConnectUserService.getUser(userAccessToken, linxoConnectUserId);
 
       // Get the connection with the final status
-      const connection: OxlinConnection = await this.oxlinConnectionService.getConnectionWithFinalStatus(
+      const connection: LinxoConnectConnection = await this.linxoConnectConnectionService.getConnectionWithFinalStatus(
         userAccessToken,
-        oxlinUserId,
+        linxoConnectUserId,
         payload.temporaryCode,
         clientConfig.finalConnectionTimeoutInMS,
       );
 
       // Check if we NOT get a valid status
-      if (connection.status !== OxlinConnectionStatus.SUCCESS) {
+      if (connection.status !== LinxoConnectConnectionStatus.SUCCESS) {
         await this.algoanAnalysisService.updateAnalysis(
           payload.customerId,
           payload.analysisId,
-          mapOxlinErrorToAlgoanAnalysis(
+          mapLinxoConnectErrorToAlgoanAnalysis(
             `Fail to get connection with a valid status. Received ${connection.status}`,
             connection,
           ),
@@ -196,40 +196,41 @@ export class HooksService {
       }
 
       // Get All Accounts
-      const accounts: OxlinAccount[] = await this.oxlinAccountService.getAllAccountsForConnection(
+      const accounts: LinxoConnectAccount[] = await this.linxoConnectAccountService.getAllAccountsForConnection(
         userAccessToken,
         connection.id,
       );
 
       // Get All transactions for all accounts
-      const transactions: OxlinTransaction[] = await this.oxlinAccountService.getAllTransactionsForAllAccounts(
-        userAccessToken,
-        accounts.map((account: OxlinAccount) => account.id),
-      );
+      const transactions: LinxoConnectTransaction[] =
+        await this.linxoConnectAccountService.getAllTransactionsForAllAccounts(
+          userAccessToken,
+          accounts.map((account: LinxoConnectAccount) => account.id),
+        );
 
       // Log duration
       const aggregationDuration: number = new Date().getTime() - aggregationStartDate.getTime();
       this.logger.log({
         message: `Account aggregation completed in ${aggregationDuration} milliseconds for Customer ${payload.customerId} and Analysis ${payload.analysisId}.`,
-        aggregator: AggregationDetailsAggregatorName.oxlin,
+        aggregator: AggregationDetailsAggregatorName.linxoConnect,
         duration: aggregationDuration,
       });
 
-      // Send the raw connection data to algoan with oxlin format
+      // Send the raw connection data to algoan with linxoConnect format
       await this.algoanAnalysisService.updateAnalysis(
         payload.customerId,
         payload.analysisId,
-        mapOxlinDataToAlgoanAnalysis(connection, accounts, transactions),
+        mapLinxoConnectDataToAlgoanAnalysis(connection, accounts, transactions),
       );
 
       // And finally we can delete the user
-      await this.oxlinUserService.deleteUser(userAccessToken, oxlinUserId);
+      await this.linxoConnectUserService.deleteUser(userAccessToken, linxoConnectUserId);
     } catch (err) {
       // Update the analysis error
       await this.algoanAnalysisService.updateAnalysis(
         payload.customerId,
         payload.analysisId,
-        mapOxlinErrorToAlgoanAnalysis(`An error occured when fetching data from the aggregator`),
+        mapLinxoConnectErrorToAlgoanAnalysis(`An error occured when fetching data from the aggregator`),
       );
 
       throw err;

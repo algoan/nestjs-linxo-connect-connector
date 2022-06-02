@@ -18,7 +18,7 @@ export class BankDetailsRequiredDTO {
   public analysisId: string;
 
   /**
-   * Oxlin iframe sends a connection_id.
+   * LinxoConnect iframe sends a connection_id.
    * So the temporaryCode should be interpreted as a connection_id for the bank_details_required event.
    */
   @IsString()

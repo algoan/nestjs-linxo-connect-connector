@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { OxlinAccountStatus, OxlinAccountType, OxlinAccountUsage } from './account.enums';
+import { LinxoConnectAccountStatus, LinxoConnectAccountType, LinxoConnectAccountUsage } from './account.enums';
 
 /**
- * Oxlin Account
+ * LinxoConnect Account
  *
  * @link https://developers.oxlin.io/reference-accounts-api/#operation/getAccounts
  */
-export interface OxlinAccount {
+export interface LinxoConnectAccount {
   connection_id: string;
   name: string;
   account_number: string;
@@ -15,9 +15,9 @@ export interface OxlinAccount {
   balance: number;
   currency: string;
   balance_date: number;
-  type: OxlinAccountType;
-  status: OxlinAccountStatus;
-  classification: OxlinAccountUsage;
+  type: LinxoConnectAccountType;
+  status: LinxoConnectAccountStatus;
+  classification: LinxoConnectAccountUsage;
   creation_date: number;
   loan: unknown;
   savings: unknown;

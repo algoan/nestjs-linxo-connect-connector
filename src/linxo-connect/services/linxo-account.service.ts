@@ -6,17 +6,17 @@ import { Config } from 'node-config-ts';
 
 import { CONFIG } from '../../config/config.module';
 
-import { OxlinAccount } from '../dto/account.object';
+import { LinxoConnectAccount } from '../dto/account.object';
 import { CustomHttpService } from '../../shared/services/http.service';
 import { AccountArgs } from '../dto/account.args';
 import { TransactionArgs } from '../dto/transaction.args';
-import { OxlinTransaction } from '../dto/transaction.object';
+import { LinxoConnectTransaction } from '../dto/transaction.object';
 
 /**
  * Service to manage account
  */
 @Injectable()
-export class OxlinAccountService {
+export class LinxoConnectAccountService {
   constructor(@Inject(CONFIG) private readonly config: Config, private readonly customHttpService: CustomHttpService) {}
 
   /**
@@ -24,15 +24,21 @@ export class OxlinAccountService {
    *
    * @link https://developers.oxlin.io/reference-accounts-api/#operation/getAccounts
    */
-  public async getAllAccountsForConnection(userAccessToken: string, connectionId: string): Promise<OxlinAccount[]> {
+  public async getAllAccountsForConnection(
+    userAccessToken: string,
+    connectionId: string,
+  ): Promise<LinxoConnectAccount[]> {
     const args: Omit<AccountArgs, 'page'> = {
       connection_id: connectionId,
       limit: 100,
     };
 
-    const getAllPagesOfAccountsStarting = async (page: number): Promise<OxlinAccount[]> => {
-      const response: AxiosResponse<OxlinAccount[]> = await this.customHttpService.get<OxlinAccount[], AccountArgs>(
-        this.config.oxlin.apiBaseUrl,
+    const getAllPagesOfAccountsStarting = async (page: number): Promise<LinxoConnectAccount[]> => {
+      const response: AxiosResponse<LinxoConnectAccount[]> = await this.customHttpService.get<
+        LinxoConnectAccount[],
+        AccountArgs
+      >(
+        this.config.linxoConnect.apiBaseUrl,
         `/accounts`,
         {
           ...args,
@@ -56,18 +62,21 @@ export class OxlinAccountService {
    *
    * @link https://developers.oxlin.io/reference-accounts-api/#operation/getTransactions
    */
-  public async getAllTransactionsForAccount(userAccessToken: string, accountId: string): Promise<OxlinTransaction[]> {
+  public async getAllTransactionsForAccount(
+    userAccessToken: string,
+    accountId: string,
+  ): Promise<LinxoConnectTransaction[]> {
     const args: Omit<TransactionArgs, 'page'> = {
       account_id: accountId,
       limit: 500,
     };
 
-    const getAllPagesOfTransactionsStarting = async (page: number): Promise<OxlinTransaction[]> => {
-      const response: AxiosResponse<OxlinTransaction[]> = await this.customHttpService.get<
-        OxlinTransaction[],
+    const getAllPagesOfTransactionsStarting = async (page: number): Promise<LinxoConnectTransaction[]> => {
+      const response: AxiosResponse<LinxoConnectTransaction[]> = await this.customHttpService.get<
+        LinxoConnectTransaction[],
         TransactionArgs
       >(
-        this.config.oxlin.apiBaseUrl,
+        this.config.linxoConnect.apiBaseUrl,
         `/transactions`,
         {
           ...args,
@@ -92,8 +101,8 @@ export class OxlinAccountService {
   public async getAllTransactionsForAllAccounts(
     userAccessToken: string,
     accountIds: string[],
-  ): Promise<OxlinTransaction[]> {
-    const transactions: OxlinTransaction[] = [];
+  ): Promise<LinxoConnectTransaction[]> {
+    const transactions: LinxoConnectTransaction[] = [];
     for (const accountId of accountIds) {
       transactions.push(...(await this.getAllTransactionsForAccount(userAccessToken, accountId)));
     }

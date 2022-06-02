@@ -1,9 +1,9 @@
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
-import { OxlinAccount } from 'src/oxlin/dto/account.object';
-import { OxlinConnection } from 'src/oxlin/dto/connection.object';
-import { OxlinTransaction } from 'src/oxlin/dto/transaction.object';
+import { LinxoConnectAccount } from 'src/linxo-connect/dto/account.object';
+import { LinxoConnectConnection } from 'src/linxo-connect/dto/connection.object';
+import { LinxoConnectTransaction } from 'src/linxo-connect/dto/transaction.object';
 import { AnalysisFormat, AnalysisStatus, ErrorCodes } from '../../algoan/dto/analysis.enum';
-import { OxlinAccountApiV2AnalysisUpdateInput } from '../../algoan/dto/analysis.inputs';
+import { LinxoConnectAccountApiV2AnalysisUpdateInput } from '../../algoan/dto/analysis.inputs';
 
 /**
  * Default currency if no provided
@@ -11,16 +11,16 @@ import { OxlinAccountApiV2AnalysisUpdateInput } from '../../algoan/dto/analysis.
 export const defaultCurrency: string = 'EUR';
 
 /**
- * Map Oxlin Data To Algoan Analysis
+ * Map LinxoConnect Data To Algoan Analysis
  */
-export function mapOxlinDataToAlgoanAnalysis(
-  connection: OxlinConnection,
-  accounts: OxlinAccount[],
-  transactions: OxlinTransaction[],
-): OxlinAccountApiV2AnalysisUpdateInput<OxlinConnection, OxlinAccount, OxlinTransaction> {
+export function mapLinxoConnectDataToAlgoanAnalysis(
+  connection: LinxoConnectConnection,
+  accounts: LinxoConnectAccount[],
+  transactions: LinxoConnectTransaction[],
+): LinxoConnectAccountApiV2AnalysisUpdateInput<LinxoConnectConnection, LinxoConnectAccount, LinxoConnectTransaction> {
   // Group transactions by accountId
-  const transactionsByAccountId: Map<string, OxlinTransaction[]> = transactions.reduce(
-    (map: Map<string, OxlinTransaction[]>, t: OxlinTransaction) => {
+  const transactionsByAccountId: Map<string, LinxoConnectTransaction[]> = transactions.reduce(
+    (map: Map<string, LinxoConnectTransaction[]>, t: LinxoConnectTransaction) => {
       map.set(t.account_id, [...(map.get(t.account_id) ?? []), t]);
 
       return map;
@@ -34,7 +34,7 @@ export function mapOxlinDataToAlgoanAnalysis(
     connections: [
       {
         ...connection,
-        accounts: accounts.map((account: OxlinAccount) => ({
+        accounts: accounts.map((account: LinxoConnectAccount) => ({
           ...account,
           transactions: transactionsByAccountId.get(account.id) ?? [],
         })),
@@ -44,12 +44,12 @@ export function mapOxlinDataToAlgoanAnalysis(
 }
 
 /**
- * Map Oxlin Error To Algoan Analysis
+ * Map LinxoConnect Error To Algoan Analysis
  */
-export function mapOxlinErrorToAlgoanAnalysis(
+export function mapLinxoConnectErrorToAlgoanAnalysis(
   message: string,
-  connection?: OxlinConnection,
-): OxlinAccountApiV2AnalysisUpdateInput<OxlinConnection, OxlinAccount, OxlinTransaction> {
+  connection?: LinxoConnectConnection,
+): LinxoConnectAccountApiV2AnalysisUpdateInput<LinxoConnectConnection, LinxoConnectAccount, LinxoConnectTransaction> {
   return {
     format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
     status: AnalysisStatus.ERROR,

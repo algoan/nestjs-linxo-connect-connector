@@ -7,7 +7,7 @@ import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { lastValueFrom } from 'rxjs';
 
 /**
- * Service to request oxlin APIs
+ * Service to request linxo connect APIs
  */
 @Injectable()
 export class CustomHttpService {

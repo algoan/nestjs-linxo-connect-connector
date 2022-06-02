@@ -56,11 +56,11 @@ const sendFakeWebhookRequest = (subscription, payload) => axios.post(
 );
 
 /**
- * Provide the Oxlin Widget Session link for the iframe mode
+ * Provide the Linxo Connect Widget Session link for the iframe mode
  */
 server.get('/iframe', async (req, res) => {
   // Reset Data
-  // Set a new customer id at each test to avoid duplicate user error on oxlin
+  // Set a new customer id at each test to avoid duplicate user error on Linxo Connect
   db.customers[0].id = `random-${Date.now()}`;
   db.analyses[0].accounts = undefined;
 

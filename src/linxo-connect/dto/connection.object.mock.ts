@@ -1,18 +1,18 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { OxlinConnectionStatus } from './connection.enums';
-import { OxlinConnection } from './connection.object';
+import { LinxoConnectConnectionStatus } from './connection.enums';
+import { LinxoConnectConnection } from './connection.object';
 
 /**
- * Oxlin Connection Mock
+ * LinxoConnect Connection Mock
  */
-export const oxlinConnectionMock: OxlinConnection = {
+export const linxoConnectConnectionMock: LinxoConnectConnection = {
   id: 'string',
   auto_sync: true,
   consent_per_account: true,
   creation_date: 0,
   name: 'string',
-  status: OxlinConnectionStatus.SUCCESS,
+  status: LinxoConnectConnectionStatus.SUCCESS,
   channels: [],
   constraints: {},
   logo_url: 'string',

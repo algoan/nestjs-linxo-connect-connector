@@ -12,10 +12,10 @@ import { WidgetSessionObject } from '../dto/widget-session.object';
 import { WidgetSessionUrlArgs } from '../dto/widget-session.args';
 import { WidgetSessionInput } from '../dto/widget-session.input';
 import { CustomHttpService } from '../../shared/services/http.service';
-import { OxlinLinkService } from './oxlin-link.service';
+import { LinxoConnectLinkService } from './linxo-link.service';
 
-describe(OxlinLinkService.name, () => {
-  let oxlinLinkService: OxlinLinkService;
+describe(LinxoConnectLinkService.name, () => {
+  let linxoConnectLinkService: LinxoConnectLinkService;
   let customHttpService: CustomHttpService;
 
   beforeEach(async () => {
@@ -25,7 +25,7 @@ describe(OxlinLinkService.name, () => {
 
     const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
-        OxlinLinkService,
+        LinxoConnectLinkService,
         {
           provide: CONFIG,
           useValue: config,
@@ -35,12 +35,12 @@ describe(OxlinLinkService.name, () => {
       .useMocker(createMock)
       .compile();
 
-    oxlinLinkService = await moduleRef.resolve<OxlinLinkService>(OxlinLinkService, contextId);
+    linxoConnectLinkService = await moduleRef.resolve<LinxoConnectLinkService>(LinxoConnectLinkService, contextId);
     customHttpService = await moduleRef.resolve<CustomHttpService>(CustomHttpService, contextId);
   });
 
   it('should be defined', async () => {
-    expect(oxlinLinkService).toBeDefined();
+    expect(linxoConnectLinkService).toBeDefined();
   });
 
   it('should return a link', async () => {
@@ -68,7 +68,7 @@ describe(OxlinLinkService.name, () => {
       .spyOn(customHttpService, 'post')
       .mockResolvedValue(Promise.resolve({ data } as unknown as AxiosResponse<WidgetSessionObject>));
 
-    const link: string = await oxlinLinkService.getIframeUrl(
+    const link: string = await linxoConnectLinkService.getIframeUrl(
       `userAccessToken-${process.pid}`,
       `clientId-${process.pid}`,
       `clientSecret-${process.pid}`,
@@ -76,7 +76,7 @@ describe(OxlinLinkService.name, () => {
       `callbackUrl-${process.pid}`,
     );
 
-    expect(spy).toHaveBeenCalledWith(config.oxlin.embedBaseUrl, '/widget/widget_session', input);
+    expect(spy).toHaveBeenCalledWith(config.linxoConnect.embedBaseUrl, '/widget/widget_session', input);
     expect(link).toBe(`add_connection-${process.pid}&${qs.stringify(widgetSessionParams)}`);
   });
 });

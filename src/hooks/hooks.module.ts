@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { OxlinModule } from '../oxlin/oxlin.module';
+import { LinxoConnectModule } from '../linxo-connect/linxo.module';
 import { ConfigModule } from '../config/config.module';
 import { AlgoanModule } from '../algoan/algoan.module';
 
@@ -12,7 +12,7 @@ import { serviceAccoutProviders } from './service-account.providers';
  * Hooks module
  */
 @Module({
-  imports: [AlgoanModule, ConfigModule, OxlinModule],
+  imports: [AlgoanModule, ConfigModule, LinxoConnectModule],
   controllers: [HooksController],
   providers: [...serviceAccoutProviders, HooksService],
 })

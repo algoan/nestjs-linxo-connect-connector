@@ -5,22 +5,22 @@ import { Config } from 'node-config-ts';
 import { CONFIG } from '../../config/config.module';
 
 import { CreateUserInput } from '../dto/create-user.input';
-import { OxlinUser } from '../dto/user.object';
+import { LinxoConnectUser } from '../dto/user.object';
 import { CustomHttpService } from '../../shared/services/http.service';
 
 /**
  * Service to manage user
  */
 @Injectable()
-export class OxlinUserService {
+export class LinxoConnectUserService {
   constructor(@Inject(CONFIG) private readonly config: Config, private readonly customHttpService: CustomHttpService) {}
 
   /**
    * Create a new user
    */
-  public async getUser(userAccessToken: string, userId: string): Promise<OxlinUser> {
-    const response: AxiosResponse<OxlinUser> = await this.customHttpService.get<OxlinUser>(
-      this.config.oxlin.apiBaseUrl,
+  public async getUser(userAccessToken: string, userId: string): Promise<LinxoConnectUser> {
+    const response: AxiosResponse<LinxoConnectUser> = await this.customHttpService.get<LinxoConnectUser>(
+      this.config.linxoConnect.apiBaseUrl,
       `/users/${userId}`,
       undefined,
       userAccessToken,
@@ -34,7 +34,7 @@ export class OxlinUserService {
    */
   public async createNewUser(clientAccessToken: string, input: CreateUserInput): Promise<string> {
     const response: AxiosResponse<undefined> = await this.customHttpService.post<undefined, CreateUserInput>(
-      this.config.oxlin.apiBaseUrl,
+      this.config.linxoConnect.apiBaseUrl,
       '/users',
       input,
       clientAccessToken,
@@ -55,7 +55,7 @@ export class OxlinUserService {
    */
   public async deleteUser(userAccessToken: string, userId: string): Promise<void> {
     await this.customHttpService.delete<void>(
-      this.config.oxlin.apiBaseUrl,
+      this.config.linxoConnect.apiBaseUrl,
       `/users/${userId}`,
       undefined,
       userAccessToken,
