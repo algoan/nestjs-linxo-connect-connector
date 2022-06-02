@@ -381,7 +381,6 @@ describe('HookService', () => {
         bankDetailsRequiredMock.analysisId,
         {
           format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
-          status: AnalysisStatus.ERROR,
           error: {
             code: ErrorCodes.INTERNAL_ERROR,
             message: `An error occured when fetching data from the aggregator`,
@@ -401,7 +400,6 @@ describe('HookService', () => {
         bankDetailsRequiredMock.analysisId,
         {
           format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
-          status: AnalysisStatus.ERROR,
           error: {
             code: ErrorCodes.INTERNAL_ERROR,
             message: `An error occured when fetching data from the aggregator`,
@@ -442,7 +440,6 @@ describe('HookService', () => {
         bankDetailsRequiredMock.analysisId,
         {
           format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
-          status: AnalysisStatus.ERROR,
           error: {
             code: ErrorCodes.INTERNAL_ERROR,
             message: `Fail to get connection with a valid status. Received ${LinxoConnectConnectionStatus.FAILED}`,
@@ -482,7 +479,6 @@ describe('HookService', () => {
         bankDetailsRequiredMock.analysisId,
         {
           format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
-          status: AnalysisStatus.ERROR,
           error: {
             code: ErrorCodes.INTERNAL_ERROR,
             message: `An error occured when fetching data from the aggregator`,
