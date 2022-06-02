@@ -47,6 +47,7 @@ export const buildFakeApp = async (): Promise<INestApplication> => {
           clientId: 'oxlinclientId',
           clientSecret: 'oxlinClientSecret',
           connectionUrl: 'http://localhost:4000',
+          finalConnectionTimeoutInMS: 10000,
         },
       },
     ],
