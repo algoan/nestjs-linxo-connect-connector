@@ -380,7 +380,7 @@ describe('HookService', () => {
         bankDetailsRequiredMock.customerId,
         bankDetailsRequiredMock.analysisId,
         {
-          format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
+          format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
           status: AnalysisStatus.ERROR,
           error: {
             code: ErrorCodes.INTERNAL_ERROR,
@@ -400,7 +400,7 @@ describe('HookService', () => {
         bankDetailsRequiredMock.customerId,
         bankDetailsRequiredMock.analysisId,
         {
-          format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
+          format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
           status: AnalysisStatus.ERROR,
           error: {
             code: ErrorCodes.INTERNAL_ERROR,
@@ -441,7 +441,7 @@ describe('HookService', () => {
         bankDetailsRequiredMock.customerId,
         bankDetailsRequiredMock.analysisId,
         {
-          format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
+          format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
           status: AnalysisStatus.ERROR,
           error: {
             code: ErrorCodes.INTERNAL_ERROR,
@@ -481,7 +481,7 @@ describe('HookService', () => {
         bankDetailsRequiredMock.customerId,
         bankDetailsRequiredMock.analysisId,
         {
-          format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
+          format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
           status: AnalysisStatus.ERROR,
           error: {
             code: ErrorCodes.INTERNAL_ERROR,

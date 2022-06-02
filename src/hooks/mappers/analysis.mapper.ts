@@ -30,7 +30,7 @@ export function mapLinxoConnectDataToAlgoanAnalysis(
 
   return {
     status: AnalysisStatus.IN_PROGRESS,
-    format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
+    format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
     connections: [
       {
         ...connection,
@@ -51,7 +51,7 @@ export function mapLinxoConnectErrorToAlgoanAnalysis(
   connection?: LinxoConnectConnection,
 ): LinxoConnectAccountApiV2AnalysisUpdateInput<LinxoConnectConnection, LinxoConnectAccount, LinxoConnectTransaction> {
   return {
-    format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
+    format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
     status: AnalysisStatus.ERROR,
     error: {
       code: ErrorCodes.INTERNAL_ERROR,

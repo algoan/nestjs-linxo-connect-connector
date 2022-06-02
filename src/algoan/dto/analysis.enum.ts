@@ -4,6 +4,7 @@
  * Analysis Status enum
  */
 export enum AnalysisFormat {
+  LINXO_CONNECT_ACCOUNT_API_V2 = 'LINXO_CONNECT_ACCOUNT_API_V2',
 }
 
 /**

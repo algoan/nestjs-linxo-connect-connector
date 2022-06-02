@@ -44,7 +44,7 @@ describe('AlgoanAnalysisService', () => {
     it('should patch an analysis', async () => {
       const spy = jest.spyOn(algoanHttpService, 'patch').mockReturnValue(Promise.resolve(analysisMock));
       const input: LinxoConnectAccountApiV2AnalysisUpdateInput<unknown, unknown, unknown> = {
-        format: AnalysisFormat.OXLIN_ACCOUNT_API_V2,
+        format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
         connections: [],
       };
       const analysis: Analysis = await algoanAnalysisService.updateAnalysis(customerMock.id, analysisMock.id, input);

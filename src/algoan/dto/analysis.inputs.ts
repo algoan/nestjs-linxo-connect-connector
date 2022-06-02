@@ -18,7 +18,7 @@ export interface LinxoConnectAccountApiV2AnalysisUpdateInput<
   LinxoConnectAccount,
   LinxoConnectTransaction,
 > extends BaseAnalysisUpdateInput {
-  format: AnalysisFormat.OXLIN_ACCOUNT_API_V2;
+  format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2;
   status?: AnalysisStatus;
   error?: AnalysisError;
   connections?: (LinxoConnectConnection & {
