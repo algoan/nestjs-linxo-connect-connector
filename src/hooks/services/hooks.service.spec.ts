@@ -170,7 +170,7 @@ describe('HookService', () => {
       );
     });
 
-    it('should do these steps WITHOUT an existing linxo connectuser', async () => {
+    it('should do these steps WITHOUT an existing linxo connect user', async () => {
       await hookService.handleAggregatorLinkRequiredEvent(aggregatorLinkRequiredMock);
 
       // get algoan customer
@@ -180,7 +180,7 @@ describe('HookService', () => {
       // Should not to get the existing user
       expect(getUserSpy).not.toHaveBeenCalled();
 
-      // get a linxo connectclient token
+      // get a linxo connect client token
       expect(geClientTokenSpy).toHaveBeenCalledWith(
         serviceAccountConfigMock.clientId,
         serviceAccountConfigMock.clientSecret,
@@ -219,7 +219,7 @@ describe('HookService', () => {
       });
     });
 
-    it('should do these steps WITH an existing linxo connectuser', async () => {
+    it('should do these steps WITH an existing linxo connect user', async () => {
       // mock to return an existing userId
       getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
@@ -240,7 +240,7 @@ describe('HookService', () => {
       );
       expect(getUserSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, `id-${process.pid}`);
 
-      // DO NOT get a linxo connectclient token
+      // DO NOT get a linxo connect client token
       expect(geClientTokenSpy).not.toHaveBeenCalled();
       // and DO NOT create a new user
       expect(createNewUserSpy).not.toHaveBeenCalled();
@@ -273,7 +273,7 @@ describe('HookService', () => {
       });
     });
 
-    it('should do these steps WITH an existing linxo connectuser AND there is an error while retrieving it', async () => {
+    it('should do these steps WITH an existing linxo connect user AND there is an error while retrieving it', async () => {
       // mock to return an existing userId
       getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
@@ -299,7 +299,7 @@ describe('HookService', () => {
 
       // BUT there is an error
 
-      // SO Connect to linxo connectas client
+      // SO Connect to linxo connect as client
       expect(geClientTokenSpy).toHaveBeenCalledWith(
         serviceAccountConfigMock.clientId,
         serviceAccountConfigMock.clientSecret,
@@ -391,7 +391,7 @@ describe('HookService', () => {
       );
     });
 
-    it('should do these steps WITHOUT an existing linxo connectuser', async () => {
+    it('should do these steps WITHOUT an existing linxo connect user', async () => {
       await expect(
         hookService.handleBankDetailsRequiredEvent(bankDetailsRequiredMock, new Date()),
       ).rejects.toThrowError("LinxoConnect user id is not defined, can't connect to LinxoConnect");
@@ -411,7 +411,7 @@ describe('HookService', () => {
       );
     });
 
-    it('should do these steps WITH an existing linxo connectuser and WITH WRONG connection status', async () => {
+    it('should do these steps WITH an existing linxo connect user and WITH WRONG connection status', async () => {
       // mock to return an existing userId
       getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
@@ -495,7 +495,7 @@ describe('HookService', () => {
       expect(deleteUserTokenSpy).not.toHaveBeenCalled();
     });
 
-    it('should do these steps WITH an existing linxo connectuser and WITHOUT LinxoConnect error', async () => {
+    it('should do these steps WITH an existing linxo connect user and WITHOUT LinxoConnect error', async () => {
       // mock to return an existing userId
       getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,

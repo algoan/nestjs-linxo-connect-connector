@@ -118,7 +118,7 @@
      * addHandlerToIframeButton
      */
     function addHandlerToIframeButton() {
-      document.getElementById('linxo-connec-iframe-button').onclick = function addIframe() {
+      document.getElementById('linxo-connect-iframe-button').onclick = function addIframe() {
         var req = new XMLHttpRequest();
         req.onload = () => setIframe(req.responseText);
         req.open("GET", "/iframe");
