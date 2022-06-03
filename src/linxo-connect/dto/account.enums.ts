@@ -33,6 +33,6 @@ export enum LinxoConnectAccountStatus {
  * @link https://developers.oxlin.io/reference-accounts-api/#operation/getAccounts
  */
 export enum LinxoConnectAccountUsage {
-  PERSONNAL = 'PERSONNAL',
+  PERSONAL = 'PERSONAL',
   PROFESSIONAL = 'PROFESSIONAL',
 }
