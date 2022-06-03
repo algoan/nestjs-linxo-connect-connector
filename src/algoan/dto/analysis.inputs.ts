@@ -1,4 +1,4 @@
-import { AnalysisStatus, AnalysisFormat } from './analysis.enum';
+import { AnalysisFormat } from './analysis.enum';
 import { AnalysisError } from './analysis.objects';
 
 /**
@@ -6,7 +6,6 @@ import { AnalysisError } from './analysis.objects';
  */
 export interface BaseAnalysisUpdateInput {
   format: AnalysisFormat;
-  status?: AnalysisStatus;
   error?: AnalysisError;
 }
 
@@ -19,7 +18,6 @@ export interface LinxoConnectAccountApiV2AnalysisUpdateInput<
   LinxoConnectTransaction,
 > extends BaseAnalysisUpdateInput {
   format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2;
-  status?: AnalysisStatus;
   error?: AnalysisError;
   connections?: (LinxoConnectConnection & {
     accounts: (LinxoConnectAccount & { transactions: LinxoConnectTransaction[] })[];

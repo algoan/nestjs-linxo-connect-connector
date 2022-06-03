@@ -7,7 +7,7 @@ import { linxoConnectTransactionsMock } from '../../linxo-connect/dto/transactio
 import { linxoConnectConnectionMock } from '../../linxo-connect/dto/connection.object.mock';
 import { LinxoConnectAccount } from '../../linxo-connect/dto/account.object';
 import { LinxoConnectTransaction } from '../../linxo-connect/dto/transaction.object';
-import { AnalysisFormat, AnalysisStatus, ErrorCodes } from '../../algoan/dto/analysis.enum';
+import { AnalysisFormat, ErrorCodes } from '../../algoan/dto/analysis.enum';
 import { mapLinxoConnectDataToAlgoanAnalysis, mapLinxoConnectErrorToAlgoanAnalysis } from './analysis.mapper';
 
 describe('AnalysisMapper', () => {
@@ -32,7 +32,6 @@ describe('AnalysisMapper', () => {
           LinxoConnectTransaction
         >
       >({
-        status: AnalysisStatus.IN_PROGRESS,
         format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
         connections: [
           {
@@ -68,7 +67,6 @@ describe('AnalysisMapper', () => {
         >
       >({
         format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
-        status: AnalysisStatus.ERROR,
         error: {
           code: ErrorCodes.INTERNAL_ERROR,
           message: 'There is an error',
@@ -91,7 +89,6 @@ describe('AnalysisMapper', () => {
         >
       >({
         format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
-        status: AnalysisStatus.ERROR,
         error: {
           code: ErrorCodes.INTERNAL_ERROR,
           message: 'There is an error',

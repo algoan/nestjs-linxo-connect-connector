@@ -2,7 +2,7 @@
 import { LinxoConnectAccount } from 'src/linxo-connect/dto/account.object';
 import { LinxoConnectConnection } from 'src/linxo-connect/dto/connection.object';
 import { LinxoConnectTransaction } from 'src/linxo-connect/dto/transaction.object';
-import { AnalysisFormat, AnalysisStatus, ErrorCodes } from '../../algoan/dto/analysis.enum';
+import { AnalysisFormat, ErrorCodes } from '../../algoan/dto/analysis.enum';
 import { LinxoConnectAccountApiV2AnalysisUpdateInput } from '../../algoan/dto/analysis.inputs';
 
 /**
@@ -29,7 +29,6 @@ export function mapLinxoConnectDataToAlgoanAnalysis(
   );
 
   return {
-    status: AnalysisStatus.IN_PROGRESS,
     format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
     connections: [
       {
@@ -52,7 +51,6 @@ export function mapLinxoConnectErrorToAlgoanAnalysis(
 ): LinxoConnectAccountApiV2AnalysisUpdateInput<LinxoConnectConnection, LinxoConnectAccount, LinxoConnectTransaction> {
   return {
     format: AnalysisFormat.LINXO_CONNECT_ACCOUNT_API_V2,
-    status: AnalysisStatus.ERROR,
     error: {
       code: ErrorCodes.INTERNAL_ERROR,
       message,
