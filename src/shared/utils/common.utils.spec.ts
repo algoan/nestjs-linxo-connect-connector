@@ -1,5 +1,6 @@
 /* eslint-disable no-null/no-null,no-magic-numbers */
 // tslint:disable: no-null-keyword
+import { assert } from 'console';
 import { IsString } from 'class-validator';
 import { assertsTypeValidation, convertNullToUndefined } from './common.utils';
 
@@ -164,5 +165,6 @@ describe('assertsTypeValidation', () => {
 
       return testData.testField.length;
     };
+    assert(testValidation);
   });
 });

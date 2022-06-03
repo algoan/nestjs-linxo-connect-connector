@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention, camelcase */
 import { ServiceAccount } from '@algoan/rest';
-import { Injectable, Inject, Logger } from '@nestjs/common';
-import { Config } from 'node-config-ts';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { AlgoanAnalysisService } from '../../algoan/services/algoan-analysis.service';
 import { LinxoConnectConnection } from '../../linxo-connect/dto/connection.object';
@@ -18,7 +17,6 @@ import { assertsTypeValidation } from '../../shared/utils/common.utils';
 import { Customer } from '../../algoan/dto/customer.objects';
 import { AlgoanCustomerService } from '../../algoan/services/algoan-customer.service';
 import { ClientConfig } from '../../algoan/dto/service-account.objects';
-import { CONFIG } from '../../config/config.module';
 import { AlgoanHttpService } from '../../algoan/services/algoan-http.service';
 
 import { AggregatorLinkRequiredDTO } from '../dto/aggregator-link-required-payload.dto';
@@ -36,7 +34,6 @@ export class HooksService {
   private readonly logger: Logger = new Logger(HooksService.name);
 
   constructor(
-    @Inject(CONFIG) private readonly config: Config,
     private readonly algoanHttpService: AlgoanHttpService,
     private readonly algoanCustomerService: AlgoanCustomerService,
     private readonly algoanAnalysisService: AlgoanAnalysisService,

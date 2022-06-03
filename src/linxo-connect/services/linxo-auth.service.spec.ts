@@ -3,7 +3,6 @@ import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AxiosResponse } from 'axios';
 import { config } from 'node-config-ts';
-import { of } from 'rxjs';
 import { ContextIdFactory } from '@nestjs/core';
 
 import { CustomHttpService } from '../../shared/services/http.service';

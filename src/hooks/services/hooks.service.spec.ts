@@ -221,7 +221,7 @@ describe('HookService', () => {
 
     it('should do these steps WITH an existing linxo connect user', async () => {
       // mock to return an existing userId
-      getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
+      jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
         aggregationDetails: {
           ...customerMock.aggregationDetails,
@@ -275,7 +275,7 @@ describe('HookService', () => {
 
     it('should do these steps WITH an existing linxo connect user AND there is an error while retrieving it', async () => {
       // mock to return an existing userId
-      getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
+      jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
         aggregationDetails: {
           ...customerMock.aggregationDetails,
@@ -340,10 +340,8 @@ describe('HookService', () => {
   });
 
   describe('handleBankDetailsRequiredEvent', () => {
-    let algoanAuthenticateSpy: jest.SpyInstance;
     let getUserTokenSpy: jest.SpyInstance;
     let deleteUserTokenSpy: jest.SpyInstance;
-    let getCustomerByIdSpy: jest.SpyInstance;
     let getConnectionByIdSpy: jest.SpyInstance;
     let getAllAccountsForConnectionSpy: jest.SpyInstance;
     let getAllTransactionsForAllAccountsSpy: jest.SpyInstance;
@@ -351,8 +349,7 @@ describe('HookService', () => {
     let getUserSpy: jest.SpyInstance;
 
     beforeEach(async () => {
-      algoanAuthenticateSpy = jest.spyOn(algoanHttpService, 'authenticate').mockReturnValue();
-      getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue(customerMock);
+      jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue(customerMock);
       updateAnalysisSpy = jest.spyOn(algoanAnalysisService, 'updateAnalysis').mockResolvedValue(analysisMock);
       getUserTokenSpy = jest
         .spyOn(linxoConnectAuthService, 'getUserToken')
@@ -413,7 +410,7 @@ describe('HookService', () => {
 
     it('should do these steps WITH an existing linxo connect user and WITH WRONG connection status', async () => {
       // mock to return an existing userId
-      getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
+      jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
         aggregationDetails: {
           ...customerMock.aggregationDetails,
@@ -463,7 +460,7 @@ describe('HookService', () => {
 
     it('should do these steps if LinxoConnect return an error', async () => {
       // mock to return an existing userId
-      getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
+      jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
         aggregationDetails: {
           ...customerMock.aggregationDetails,
@@ -497,7 +494,7 @@ describe('HookService', () => {
 
     it('should do these steps WITH an existing linxo connect user and WITHOUT LinxoConnect error', async () => {
       // mock to return an existing userId
-      getCustomerByIdSpy = jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
+      jest.spyOn(algoanCustomerService, 'getCustomerById').mockResolvedValue({
         ...customerMock,
         aggregationDetails: {
           ...customerMock.aggregationDetails,

@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention, camelcase */
 
-import { GrantType } from './grant-type.enum';
-
 /**
  * Object when we request a new access token
  *
