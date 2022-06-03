@@ -19,7 +19,7 @@ import { linxoConnectUserMock } from '../../linxo-connect/dto/user.object.mock';
 import { linxoConnectConnectionMock } from '../../linxo-connect/dto/connection.object.mock';
 import { linxoConnectAccountsMock } from '../../linxo-connect/dto/account.object.mock';
 import { linxoConnectTransactionsMock } from '../../linxo-connect/dto/transaction.object.mock';
-import { AnalysisFormat, AnalysisStatus, ErrorCodes } from '../../algoan/dto/analysis.enum';
+import { AnalysisFormat, ErrorCodes } from '../../algoan/dto/analysis.enum';
 import { analysisMock } from '../../algoan/dto/analysis.objects.mock';
 import { LinxoConnectAccountService } from '../../linxo-connect/services/linxo-account.service';
 import { LinxoConnectConnectionService } from '../../linxo-connect/services/linxo-connection.service';
