@@ -29,7 +29,9 @@ This section describes the process required for each subscription for an aggrega
 
 ### Aggregator Link Required
 
-The Linxo Connect end-user needs to be redirected to an external page.
+When the user is about to connect their bank accounts, the connector is triggered in order to supply the [Linxo Connect widget](https://developers.oxlin.io/docs/accounts-api-quickstart).
+
+> 💡 For now, we only support the Linxo Connect widget as [an iframe](https://developers.oxlin.io/docs/accounts-api-howto-iframe). If you want to redirect the end-user instead of embedding Linxo, please contact [us](mailto://support@algoan.com)
 
 * The client should have this configuration data in the service account:
   
@@ -37,6 +39,7 @@ The Linxo Connect end-user needs to be redirected to an external page.
   {
     "clientId": string;
     "clientSecret": string;
+    "connectionUrl": string;
   }
 ```
 
@@ -50,9 +53,24 @@ The Linxo Connect end-user needs to be redirected to an external page.
 
 The diagram below describes interactions:
 
-![aggregator_link_required](public/aggregator_link_required.png)
 
-Refers to the [`aggregator_link_required`](https://developers.algoan.com/public/docs/algoan_documentation/resthooks_and_events/event_list.html#aggregator_link_required) event.
+```mermaid
+sequenceDiagram
+    participant EU as End user
+    participant Algoan
+    participant LCC as Linxo Connect Connector
+    participant LC as Linxo Connect
+    EU ->> Algoan: Begins bank connection
+    Algoan ->> LCC: trigger aggregator_link_required event
+    LCC ->> Algoan: GET /v2/customers/{id}
+    LCC ->> LC: Client authentication
+    LCC ->> LC: Get or create a user
+    LCC ->> LC: User authentication
+    LCC ->> LC: Create a widget session
+    LCC ->> Algoan: Send the widget URL
+    Algoan ->> EU: Display Linxo Connect widget
+```
+
 
 ### Bank Details Required
 
@@ -60,7 +78,7 @@ When the user has finished the aggregation process, the connector has to retriev
 
 * The event should contains those information:
 
-```
+```ts
   {
     customerId: string;
     analysisId: string; // The analysis id to update with account and transaction data
@@ -69,7 +87,21 @@ When the user has finished the aggregation process, the connector has to retriev
 
 The diagram below describes interactions:
 
-![bank_details_required](public/bank_details_required.png)
+```mermaid
+sequenceDiagram
+    participant EU as End user
+    participant Algoan
+    participant LCC as Linxo Connect Connector
+    participant LC as Linxo Connect
+    EU ->> Algoan: End of the bank connection
+    Algoan ->> LCC: trigger bank_details_required event
+    LCC ->> Algoan: GET /v2/customers/{id}
+    LCC ->> LC: Authenticate the user
+    LCC ->> LC: Get connections
+    LCC ->> LC: Get accounts
+    LCC ->> LC: Get transactions
+    LCC ->> Algoan: PATCH /v2/customers/{id}/analyses/{analysisId}            
+```
 
 Refers to the [`bank_details_required`](https://developers.algoan.com/public/docs/algoan_documentation/resthooks_and_events/event_list.html#bank_details_required) event.
 
@@ -125,11 +157,13 @@ $ npm install
 
 To test locally the Linxo Connect Link process, a simple `index.html` file is rendered. To use it:
 
-Before testing
+Before testing:
+
 - The client config should be updated in `service-accounts.config` in  `./json-server/db.json'.
 - You can enable http log `config/default.json` with `enableHttpRequestLog`, `enableHttpResponseLog`, `enableHttpErrorLog`
 
-Run Test
+Run Test:
+
 - Run `npm run start:dev`. It will render an index.html file. Algoan APIs are exposed and mocked by a [json-server](https://github.com/typicode/json-server).
 - Go to your favorite browser and navigate to http://localhost:4000. It should display a web page:
 
