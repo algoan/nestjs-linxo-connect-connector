@@ -1,6 +1,15 @@
 
-name: Run Build and tests
+name: Run Build, tests and Publish (workflow_dispatch)
 on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: |
+          The branch, tag or SHA to checkout. When checking out the repository that
+          triggered a workflow, this defaults to the reference or SHA for that event.
+          Otherwise, uses the default branch.
+        required: false
+        default: master
   pull_request:
     paths-ignore:
       - .helm/**
@@ -44,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy the docker image to GCP
     needs: test_workflow
-    if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+    if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'workflow_dispatch' }}
     steps:
       # Checkout the repository
       - uses: actions/checkout@v2
