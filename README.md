@@ -103,8 +103,6 @@ sequenceDiagram
     LCC ->> Algoan: PATCH /v2/customers/{id}/analyses/{analysisId}            
 ```
 
-Refers to the [`bank_details_required`](https://developers.algoan.com/public/docs/algoan_documentation/resthooks_and_events/event_list.html#bank_details_required) event.
-
 ## Application Structure
 
 - `config/`: stores all configurations for the application. It uses [node-config-ts](https://github.com/tusharmath/node-config-ts) to generate a type definition of the `default.json` file.
