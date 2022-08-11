@@ -91,7 +91,7 @@ describe(LinxoConnectAuthService.name, () => {
         client_id: serviceAccountConfigMock.clientId,
         client_secret: serviceAccountConfigMock.clientSecret,
         grant_type: GrantType.PASSWORD,
-        scope: 'profile profile_edit accounts_manage connections_manage connections_sync transactions_read',
+        scope: 'profile_edit accounts_read connections_manage transactions_read',
 
         username: 'email@algoan.com',
         password: 'thisIsAStringPassword',
