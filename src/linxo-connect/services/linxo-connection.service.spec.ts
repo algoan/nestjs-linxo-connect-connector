@@ -60,7 +60,6 @@ describe(LinxoConnectConnectionService.name, () => {
 
       const connection: LinxoConnectConnection = await linxoConnectConnectionService.getConnection(
         'token',
-        `userId-${process.pid}`,
         connectionMock.id,
       );
 
@@ -69,12 +68,6 @@ describe(LinxoConnectConnectionService.name, () => {
         `/connections/${connectionMock.id}`,
         undefined,
         'token',
-        {
-          headers: {
-            'x-linxo-user-id': `userId-${process.pid}`,
-            'x-scope': 'accounts_read transactions_read',
-          },
-        },
       );
       expect(connection).toBe(connectionMock);
     });
@@ -93,13 +86,12 @@ describe(LinxoConnectConnectionService.name, () => {
 
       const connection: LinxoConnectConnection = await linxoConnectConnectionService.getConnectionWithFinalStatus(
         'token',
-        `userId-${process.pid}`,
         connectionMock.id,
         60_000,
       );
 
       expect(spy).toBeCalledTimes(1);
-      expect(spy).toHaveBeenCalledWith('token', `userId-${process.pid}`, connectionMock.id);
+      expect(spy).toHaveBeenCalledWith('token', connectionMock.id);
       expect(connection).toBe(connectionMock);
     });
 
@@ -115,13 +107,12 @@ describe(LinxoConnectConnectionService.name, () => {
 
       const connection: LinxoConnectConnection = await linxoConnectConnectionService.getConnectionWithFinalStatus(
         'token',
-        `userId-${process.pid}`,
         connectionMock.id,
         60_000,
       );
 
       expect(spy).toBeCalledTimes(1);
-      expect(spy).toHaveBeenCalledWith('token', `userId-${process.pid}`, connectionMock.id);
+      expect(spy).toHaveBeenCalledWith('token', connectionMock.id);
       expect(connection).toBe(connectionMock);
     });
 
@@ -141,7 +132,6 @@ describe(LinxoConnectConnectionService.name, () => {
 
       const connection: LinxoConnectConnection = await linxoConnectConnectionService.getConnectionWithFinalStatus(
         'token',
-        `userId-${process.pid}`,
         connectionMock.id,
         60_000,
       );
@@ -161,12 +151,7 @@ describe(LinxoConnectConnectionService.name, () => {
         .mockResolvedValueOnce(connectionMock as unknown as LinxoConnectConnection);
 
       await expect(
-        linxoConnectConnectionService.getConnectionWithFinalStatus(
-          'token',
-          `userId-${process.pid}`,
-          connectionMock.id,
-          1000,
-        ),
+        linxoConnectConnectionService.getConnectionWithFinalStatus('token', connectionMock.id, 1000),
       ).rejects.toThrowError('Connection final status take too long');
     });
   });

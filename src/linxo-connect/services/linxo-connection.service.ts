@@ -24,7 +24,6 @@ export class LinxoConnectConnectionService {
    */
   public async getConnectionWithFinalStatus(
     userAccessToken: string,
-    userId: string,
     connectionId: string,
     timeoutInMS: number,
   ): Promise<LinxoConnectConnection> {
@@ -39,11 +38,7 @@ export class LinxoConnectConnectionService {
         throw new Error('Connection final status take too long');
       }
 
-      const linxoConnectConnection: LinxoConnectConnection = await this.getConnection(
-        userAccessToken,
-        userId,
-        connectionId,
-      );
+      const linxoConnectConnection: LinxoConnectConnection = await this.getConnection(userAccessToken, connectionId);
 
       if (linxoConnectConnection.status !== LinxoConnectConnectionStatus.RUNNING) {
         return linxoConnectConnection;
@@ -63,22 +58,12 @@ export class LinxoConnectConnectionService {
    *
    * @link https://developers.oxlin.io/reference-accounts-api/#operation/getConnectionByIdUsingGET
    */
-  public async getConnection(
-    userAccessToken: string,
-    userId: string,
-    connectionId: string,
-  ): Promise<LinxoConnectConnection> {
+  public async getConnection(userAccessToken: string, connectionId: string): Promise<LinxoConnectConnection> {
     const response: AxiosResponse<LinxoConnectConnection> = await this.customHttpService.get<LinxoConnectConnection>(
       this.config.linxoConnect.apiBaseUrl,
       `/connections/${connectionId}`,
       undefined,
       userAccessToken,
-      {
-        headers: {
-          'x-linxo-user-id': userId,
-          'x-scope': 'accounts_read transactions_read',
-        },
-      },
     );
 
     return response.data;

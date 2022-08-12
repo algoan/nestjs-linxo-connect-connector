@@ -427,7 +427,6 @@ describe('HookService', () => {
       // first get connection
       expect(getConnectionByIdSpy).toHaveBeenCalledWith(
         `user-token-${process.pid}`,
-        linxoConnectUserMock.id,
         bankDetailsRequiredMock.temporaryCode,
         serviceAccountConfigMock.finalConnectionTimeoutInMS,
       );
@@ -521,7 +520,6 @@ describe('HookService', () => {
       // first get connection
       expect(getConnectionByIdSpy).toHaveBeenCalledWith(
         `user-token-${process.pid}`,
-        linxoConnectUserMock.id,
         bankDetailsRequiredMock.temporaryCode,
         serviceAccountConfigMock.finalConnectionTimeoutInMS,
       );

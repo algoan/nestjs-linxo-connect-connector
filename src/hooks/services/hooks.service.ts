@@ -173,7 +173,6 @@ export class HooksService {
       // Get the connection with the final status
       const connection: LinxoConnectConnection = await this.linxoConnectConnectionService.getConnectionWithFinalStatus(
         userAccessToken,
-        linxoConnectUserId,
         payload.temporaryCode,
         clientConfig.finalConnectionTimeoutInMS,
       );
