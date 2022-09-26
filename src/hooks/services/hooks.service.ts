@@ -22,6 +22,7 @@ import { AlgoanHttpService } from '../../algoan/services/algoan-http.service';
 import { AggregatorLinkRequiredDTO } from '../dto/aggregator-link-required-payload.dto';
 import { BankDetailsRequiredDTO } from '../dto/bank-details-required-payload.dto';
 import { mapLinxoConnectDataToAlgoanAnalysis, mapLinxoConnectErrorToAlgoanAnalysis } from '../mappers/analysis.mapper';
+import { WidgetConfig } from '../../algoan/dto/widget-config.objects';
 
 /**
  * Hook service
@@ -66,6 +67,9 @@ export class HooksService {
       );
     }
     assertsTypeValidation(ClientConfig, clientConfig);
+    if (clientConfig.widgetConfig !== undefined) {
+      assertsTypeValidation(WidgetConfig, clientConfig.widgetConfig);
+    }
 
     // Get the linxoConnect user if saved on customer
     let linxoConnectUserId: string | undefined = customer.aggregationDetails.userId;
@@ -116,6 +120,7 @@ export class HooksService {
       clientConfig.clientSecret,
       clientConfig.connectionUrl,
       callbackUrl,
+      clientConfig.widgetConfig,
     );
 
     // Update user with redirect link information and userId if provided

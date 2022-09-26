@@ -10,6 +10,7 @@ import { WidgetSessionObject } from '../dto/widget-session.object';
 import { WidgetSessionInput } from '../dto/widget-session.input';
 import { WidgetSessionUrlArgs } from '../dto/widget-session.args';
 import { CustomHttpService } from '../../shared/services/http.service';
+import { WidgetConfig } from '../../algoan/dto/widget-config.objects';
 
 /**
  * Service to manage linxo connect
@@ -28,6 +29,7 @@ export class LinxoConnectLinkService {
     clientSecret: string,
     connectionUrl: string,
     callbackUrl: string,
+    widgetConfig?: WidgetConfig,
   ): Promise<string> {
     const input: WidgetSessionInput = {
       access_token: userAccessToken,
@@ -45,6 +47,9 @@ export class LinxoConnectLinkService {
       aspsp_callback_uri: connectionUrl,
       consent_per_account: true,
       wait_sync_end: true,
+      lng: widgetConfig?.iframe?.language,
+      font: widgetConfig?.iframe?.font,
+      font_color: widgetConfig?.iframe?.fontColor,
     };
 
     // eslint-disable-next-line no-underscore-dangle

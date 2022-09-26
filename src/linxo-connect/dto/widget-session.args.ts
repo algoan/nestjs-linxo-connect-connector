@@ -8,4 +8,7 @@ export interface WidgetSessionUrlArgs {
   aspsp_callback_uri: string;
   consent_per_account: boolean;
   wait_sync_end: boolean;
+  lng?: string;
+  font?: string;
+  font_color?: string;
 }

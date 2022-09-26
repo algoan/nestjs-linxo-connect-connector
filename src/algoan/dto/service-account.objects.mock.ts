@@ -8,4 +8,11 @@ export const serviceAccountConfigMock: ClientConfig = {
   clientSecret: 'clientSecret',
   connectionUrl: 'http://localhost:4000',
   finalConnectionTimeoutInMS: 60_000,
+  widgetConfig: {
+    iframe: {
+      language: 'en',
+      font: 'Arial',
+      fontColor: 'Blue',
+    },
+  },
 };
