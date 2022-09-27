@@ -133,6 +133,14 @@ describe('HookService', () => {
     let getUserSpy: jest.SpyInstance;
     let createNewUserSpy: jest.SpyInstance;
 
+    const expectedWidgetConfig = {
+      iframe: {
+        language: 'en',
+        font: 'Arial',
+        fontColor: 'Blue',
+      },
+    };
+
     beforeEach(async () => {
       algoanAuthenticateSpy = jest.spyOn(algoanHttpService, 'authenticate').mockReturnValue();
       updateCustomerSpy = jest.spyOn(algoanCustomerService, 'updateCustomer').mockResolvedValue(customerMock);
@@ -206,6 +214,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         serviceAccountConfigMock.connectionUrl,
         customerMock.aggregationDetails.callbackUrl,
+        expectedWidgetConfig,
       );
 
       // and finally save userId and url in customer details
@@ -260,6 +269,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         serviceAccountConfigMock.connectionUrl,
         customerMock.aggregationDetails.callbackUrl,
+        expectedWidgetConfig,
       );
 
       // and finally save userid and url in customer details
@@ -325,6 +335,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         serviceAccountConfigMock.connectionUrl,
         customerMock.aggregationDetails.callbackUrl,
+        expectedWidgetConfig,
       );
 
       // and finally save userid and url in customer details

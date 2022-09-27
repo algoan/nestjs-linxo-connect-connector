@@ -12,6 +12,7 @@ import { WidgetSessionObject } from '../dto/widget-session.object';
 import { WidgetSessionUrlArgs } from '../dto/widget-session.args';
 import { WidgetSessionInput } from '../dto/widget-session.input';
 import { CustomHttpService } from '../../shared/services/http.service';
+import { WidgetConfig } from '../../algoan/dto/widget-config.objects';
 import { LinxoConnectLinkService } from './linxo-link.service';
 
 describe(LinxoConnectLinkService.name, () => {
@@ -62,6 +63,17 @@ describe(LinxoConnectLinkService.name, () => {
       aspsp_callback_uri: `connectionUrl-${process.pid}`,
       consent_per_account: true,
       wait_sync_end: true,
+      lng: 'en',
+      font: 'Arial',
+      font_color: 'Blue',
+    };
+
+    const widgetConfig: WidgetConfig = {
+      iframe: {
+        language: 'en',
+        font: 'Arial',
+        fontColor: 'Blue',
+      },
     };
 
     const spy = jest
@@ -74,6 +86,7 @@ describe(LinxoConnectLinkService.name, () => {
       `clientSecret-${process.pid}`,
       `connectionUrl-${process.pid}`,
       `callbackUrl-${process.pid}`,
+      widgetConfig,
     );
 
     expect(spy).toHaveBeenCalledWith(config.linxoConnect.embedBaseUrl, '/widget/widget_session', input);

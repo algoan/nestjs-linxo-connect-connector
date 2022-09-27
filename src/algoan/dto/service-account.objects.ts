@@ -1,4 +1,6 @@
-import { IsNumber, IsPositive, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNumber, IsOptional, IsPositive, IsString, ValidateNested } from 'class-validator';
+import { WidgetConfig } from './widget-config.objects';
 
 /**
  * Client Config
@@ -16,4 +18,9 @@ export class ClientConfig {
   @IsNumber()
   @IsPositive()
   public finalConnectionTimeoutInMS: number;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => WidgetConfig)
+  public widgetConfig?: WidgetConfig;
 }
