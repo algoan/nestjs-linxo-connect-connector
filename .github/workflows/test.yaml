@@ -57,6 +57,11 @@ jobs:
     steps:
       # Checkout the repository
       - uses: actions/checkout@v2
+      # Setup the node environment
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
       # Set up google credentials
       - uses: google-github-actions/setup-gcloud@v0
         with:
