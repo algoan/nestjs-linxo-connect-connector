@@ -40,7 +40,7 @@ export class LinxoConnectAuthService {
       client_id: clientId,
       client_secret: clientSecret,
       grant_type: GrantType.PASSWORD,
-      scope: 'profile_edit accounts_read connections_manage transactions_read',
+      scope: 'profile_edit accounts_read connections_manage connections_sync transactions_read',
 
       username: email,
       password,
