@@ -10,7 +10,7 @@ export const serviceAccountConfigMock: ClientConfig = {
   finalConnectionTimeoutInMS: 60_000,
   widgetConfig: {
     iframe: {
-      language: 'en',
+      locale: 'en_EN',
       font: 'Arial',
       fontColor: 'Blue',
     },
