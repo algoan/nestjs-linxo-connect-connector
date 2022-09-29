@@ -6,7 +6,7 @@ import { IsLocale, IsOptional, IsString } from 'class-validator';
 export class IFrameConfig {
   @IsOptional()
   @IsLocale()
-  public language?: string;
+  public locale?: string;
 
   @IsOptional()
   @IsString()

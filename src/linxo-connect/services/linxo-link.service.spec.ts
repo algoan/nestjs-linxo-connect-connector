@@ -63,14 +63,14 @@ describe(LinxoConnectLinkService.name, () => {
       aspsp_callback_uri: `connectionUrl-${process.pid}`,
       consent_per_account: true,
       wait_sync_end: true,
-      lng: 'en',
+      locale: 'en_EN',
       font: 'Arial',
       font_color: 'Blue',
     };
 
     const widgetConfig: WidgetConfig = {
       iframe: {
-        language: 'en',
+        locale: 'en_EN',
         font: 'Arial',
         fontColor: 'Blue',
       },

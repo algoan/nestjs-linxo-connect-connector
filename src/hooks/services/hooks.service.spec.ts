@@ -135,7 +135,7 @@ describe('HookService', () => {
 
     const expectedWidgetConfig = {
       iframe: {
-        language: 'en',
+        locale: 'en_EN',
         font: 'Arial',
         fontColor: 'Blue',
       },

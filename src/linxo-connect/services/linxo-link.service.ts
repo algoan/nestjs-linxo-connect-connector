@@ -47,7 +47,7 @@ export class LinxoConnectLinkService {
       aspsp_callback_uri: connectionUrl,
       consent_per_account: true,
       wait_sync_end: true,
-      lng: widgetConfig?.iframe?.language,
+      locale: widgetConfig?.iframe?.locale,
       font: widgetConfig?.iframe?.font,
       font_color: widgetConfig?.iframe?.fontColor,
     };
