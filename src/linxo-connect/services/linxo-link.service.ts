@@ -50,6 +50,7 @@ export class LinxoConnectLinkService {
       locale: widgetConfig?.iframe?.locale,
       font: widgetConfig?.iframe?.font,
       font_color: widgetConfig?.iframe?.fontColor,
+      elements_color: widgetConfig?.iframe?.elementsColor,
     };
 
     // eslint-disable-next-line no-underscore-dangle

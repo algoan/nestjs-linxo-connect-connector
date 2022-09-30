@@ -15,4 +15,8 @@ export class IFrameConfig {
   @IsOptional()
   @IsString()
   public fontColor?: string;
+
+  @IsOptional()
+  @IsString()
+  public elementsColor?: string;
 }

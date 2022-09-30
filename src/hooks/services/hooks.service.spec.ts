@@ -138,6 +138,7 @@ describe('HookService', () => {
         locale: 'en_EN',
         font: 'Arial',
         fontColor: 'Blue',
+        elementsColor: 'Yellow',
       },
     };
 

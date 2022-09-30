@@ -11,4 +11,5 @@ export interface WidgetSessionUrlArgs {
   locale?: string;
   font?: string;
   font_color?: string;
+  elements_color?: string;
 }

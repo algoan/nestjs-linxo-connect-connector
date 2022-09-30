@@ -13,6 +13,7 @@ export const serviceAccountConfigMock: ClientConfig = {
       locale: 'en_EN',
       font: 'Arial',
       fontColor: 'Blue',
+      elementsColor: 'Yellow',
     },
   },
 };
