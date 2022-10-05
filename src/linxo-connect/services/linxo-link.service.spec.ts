@@ -66,6 +66,7 @@ describe(LinxoConnectLinkService.name, () => {
       locale: 'en_EN',
       font: 'Arial',
       font_color: 'Blue',
+      elements_color: 'Yellow',
     };
 
     const widgetConfig: WidgetConfig = {
@@ -73,6 +74,7 @@ describe(LinxoConnectLinkService.name, () => {
         locale: 'en_EN',
         font: 'Arial',
         fontColor: 'Blue',
+        elementsColor: 'Yellow',
       },
     };
 
