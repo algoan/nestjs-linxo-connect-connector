@@ -9,6 +9,7 @@ import { CONFIG } from '../../config/config.module';
 import { LinxoConnectConnection } from '../dto/connection.object';
 import { CustomHttpService } from '../../shared/services/http.service';
 import { LinxoConnectConnectionStatus } from '../dto/connection.enums';
+import { Env } from '../dto/env.enums';
 
 const expFactor: number = 2;
 
@@ -26,6 +27,7 @@ export class LinxoConnectConnectionService {
     userAccessToken: string,
     connectionId: string,
     timeoutInMS: number,
+    env: Env,
   ): Promise<LinxoConnectConnection> {
     const startTimeInMS: number = Date.now();
 
@@ -38,7 +40,11 @@ export class LinxoConnectConnectionService {
         throw new Error('Connection final status take too long');
       }
 
-      const linxoConnectConnection: LinxoConnectConnection = await this.getConnection(userAccessToken, connectionId);
+      const linxoConnectConnection: LinxoConnectConnection = await this.getConnection(
+        userAccessToken,
+        connectionId,
+        env,
+      );
 
       if (linxoConnectConnection.status !== LinxoConnectConnectionStatus.RUNNING) {
         return linxoConnectConnection;
@@ -58,9 +64,9 @@ export class LinxoConnectConnectionService {
    *
    * @link https://developers.oxlin.io/reference-accounts-api/#operation/getConnectionByIdUsingGET
    */
-  public async getConnection(userAccessToken: string, connectionId: string): Promise<LinxoConnectConnection> {
+  public async getConnection(userAccessToken: string, connectionId: string, env: Env): Promise<LinxoConnectConnection> {
     const response: AxiosResponse<LinxoConnectConnection> = await this.customHttpService.get<LinxoConnectConnection>(
-      this.config.linxoConnect.apiBaseUrl,
+      this.config.linxoConnect[env].apiBaseUrl,
       `/connections/${connectionId}`,
       undefined,
       userAccessToken,

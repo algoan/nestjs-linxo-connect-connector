@@ -10,6 +10,7 @@ import { CONFIG } from '../../config/config.module';
 
 import { CustomHttpService } from '../../shared/services/http.service';
 import { LinxoConnectAccount } from '../dto/account.object';
+import { Env } from '../dto/env.enums';
 import { LinxoConnectTransaction } from '../dto/transaction.object';
 import { LinxoConnectAccountService } from './linxo-account.service';
 
@@ -57,10 +58,11 @@ describe(LinxoConnectAccountService.name, () => {
       const acccounts: LinxoConnectAccount[] = await linxoConnectAccountService.getAllAccountsForConnection(
         'token',
         `connectionId`,
+        Env.sandbox,
       );
 
       expect(spy).toHaveBeenCalledWith(
-        config.linxoConnect.apiBaseUrl,
+        config.linxoConnect.sandbox.apiBaseUrl,
         `/accounts`,
         {
           connection_id: 'connectionId',
@@ -90,6 +92,7 @@ describe(LinxoConnectAccountService.name, () => {
       const acccounts: LinxoConnectAccount[] = await linxoConnectAccountService.getAllAccountsForConnection(
         'token',
         `connectionId`,
+        Env.sandbox,
       );
 
       expect(spy).toHaveBeenCalledTimes(3);
@@ -110,10 +113,11 @@ describe(LinxoConnectAccountService.name, () => {
       const transactions: LinxoConnectTransaction[] = await linxoConnectAccountService.getAllTransactionsForAccount(
         'token',
         `accountId`,
+        Env.sandbox,
       );
 
       expect(spy).toHaveBeenCalledWith(
-        config.linxoConnect.apiBaseUrl,
+        config.linxoConnect.sandbox.apiBaseUrl,
         `/transactions`,
         {
           account_id: 'accountId',
@@ -145,6 +149,7 @@ describe(LinxoConnectAccountService.name, () => {
       const transactions: LinxoConnectTransaction[] = await linxoConnectAccountService.getAllTransactionsForAccount(
         'token',
         `accountId`,
+        Env.sandbox,
       );
 
       expect(spy).toHaveBeenCalledTimes(3);
@@ -163,6 +168,7 @@ describe(LinxoConnectAccountService.name, () => {
       const transactions: LinxoConnectTransaction[] = await linxoConnectAccountService.getAllTransactionsForAllAccounts(
         'token',
         [`accountId-1`, `accountId-2`],
+        Env.sandbox,
       );
 
       expect(spy).toHaveBeenCalledTimes(2);

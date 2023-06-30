@@ -11,6 +11,7 @@ import { WidgetSessionInput } from '../dto/widget-session.input';
 import { WidgetSessionUrlArgs } from '../dto/widget-session.args';
 import { CustomHttpService } from '../../shared/services/http.service';
 import { WidgetConfig } from '../../algoan/dto/widget-config.objects';
+import { Env } from '../dto/env.enums';
 
 /**
  * Service to manage linxo connect
@@ -29,6 +30,7 @@ export class LinxoConnectLinkService {
     clientSecret: string,
     connectionUrl: string,
     callbackUrl: string,
+    env: Env,
     widgetConfig?: WidgetConfig,
   ): Promise<string> {
     const input: WidgetSessionInput = {
@@ -40,7 +42,7 @@ export class LinxoConnectLinkService {
     const result: AxiosResponse<WidgetSessionObject> = await this.customHttpService.post<
       WidgetSessionObject,
       WidgetSessionInput
-    >(this.config.linxoConnect.embedBaseUrl, `/widget/widget_session`, input);
+    >(this.config.linxoConnect[env].embedBaseUrl, `/widget/widget_session`, input);
 
     const widgetSessionParams: WidgetSessionUrlArgs = {
       redirect_url: callbackUrl,

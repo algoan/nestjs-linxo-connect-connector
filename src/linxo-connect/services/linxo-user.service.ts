@@ -7,6 +7,7 @@ import { CONFIG } from '../../config/config.module';
 import { CreateUserInput } from '../dto/create-user.input';
 import { LinxoConnectUser } from '../dto/user.object';
 import { CustomHttpService } from '../../shared/services/http.service';
+import { Env } from '../dto/env.enums';
 
 /**
  * Service to manage user
@@ -18,9 +19,9 @@ export class LinxoConnectUserService {
   /**
    * Create a new user
    */
-  public async getUser(userAccessToken: string, userId: string): Promise<LinxoConnectUser> {
+  public async getUser(userAccessToken: string, userId: string, env: Env): Promise<LinxoConnectUser> {
     const response: AxiosResponse<LinxoConnectUser> = await this.customHttpService.get<LinxoConnectUser>(
-      this.config.linxoConnect.apiBaseUrl,
+      this.config.linxoConnect[env].apiBaseUrl,
       `/users/${userId}`,
       undefined,
       userAccessToken,
@@ -32,9 +33,9 @@ export class LinxoConnectUserService {
   /**
    * Create a new user
    */
-  public async createNewUser(clientAccessToken: string, input: CreateUserInput): Promise<string> {
+  public async createNewUser(clientAccessToken: string, input: CreateUserInput, env: Env): Promise<string> {
     const response: AxiosResponse<undefined> = await this.customHttpService.post<undefined, CreateUserInput>(
-      this.config.linxoConnect.apiBaseUrl,
+      this.config.linxoConnect[env].apiBaseUrl,
       '/users',
       input,
       clientAccessToken,
@@ -53,9 +54,9 @@ export class LinxoConnectUserService {
   /**
    * Delete the current user (Should be the same as the user token)
    */
-  public async deleteUser(userAccessToken: string, userId: string): Promise<void> {
+  public async deleteUser(userAccessToken: string, userId: string, env: Env): Promise<void> {
     await this.customHttpService.delete<void>(
-      this.config.linxoConnect.apiBaseUrl,
+      this.config.linxoConnect[env].apiBaseUrl,
       `/users/${userId}`,
       undefined,
       userAccessToken,

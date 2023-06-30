@@ -42,6 +42,7 @@ import { subscriptionMock } from '../dto/subscription.dto.mock';
 
 import { bankDetailsRequiredMock } from '../dto/bank-details-required-payload.dto.mock';
 import { mapLinxoConnectDataToAlgoanAnalysis } from '../mappers/analysis.mapper';
+import { Env } from '../../linxo-connect/dto/env.enums';
 import { HooksService } from './hooks.service';
 
 describe('HookService', () => {
@@ -193,12 +194,17 @@ describe('HookService', () => {
       expect(geClientTokenSpy).toHaveBeenCalledWith(
         serviceAccountConfigMock.clientId,
         serviceAccountConfigMock.clientSecret,
+        Env.sandbox,
       );
       // and create a new user
-      expect(createNewUserSpy).toHaveBeenCalledWith(`client-token-${process.pid}`, {
-        email: algoanCustomerService.getDefaultEmail(customerMock.id),
-        password: algoanCustomerService.getDefaultPassword(customerMock.id),
-      });
+      expect(createNewUserSpy).toHaveBeenCalledWith(
+        `client-token-${process.pid}`,
+        {
+          email: algoanCustomerService.getDefaultEmail(customerMock.id),
+          password: algoanCustomerService.getDefaultPassword(customerMock.id),
+        },
+        Env.sandbox,
+      );
 
       // then get a user token
       expect(getUserTokenSpy).toHaveBeenCalledWith(
@@ -206,6 +212,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         algoanCustomerService.getDefaultEmail(customerMock.id),
         algoanCustomerService.getDefaultPassword(customerMock.id),
+        Env.sandbox,
       );
 
       // to get a new iframe url
@@ -215,6 +222,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         serviceAccountConfigMock.connectionUrl,
         customerMock.aggregationDetails.callbackUrl,
+        Env.sandbox,
         expectedWidgetConfig,
       );
 
@@ -247,8 +255,9 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         algoanCustomerService.getDefaultEmail(customerMock.id),
         algoanCustomerService.getDefaultPassword(customerMock.id),
+        Env.sandbox,
       );
-      expect(getUserSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, `id-${process.pid}`);
+      expect(getUserSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, `id-${process.pid}`, Env.sandbox);
 
       // DO NOT get a linxo connect client token
       expect(geClientTokenSpy).not.toHaveBeenCalled();
@@ -261,6 +270,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         algoanCustomerService.getDefaultEmail(customerMock.id),
         algoanCustomerService.getDefaultPassword(customerMock.id),
+        Env.sandbox,
       );
 
       // to get a new iframe url
@@ -270,6 +280,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         serviceAccountConfigMock.connectionUrl,
         customerMock.aggregationDetails.callbackUrl,
+        Env.sandbox,
         expectedWidgetConfig,
       );
 
@@ -305,6 +316,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         algoanCustomerService.getDefaultEmail(customerMock.id),
         algoanCustomerService.getDefaultPassword(customerMock.id),
+        Env.sandbox,
       );
       expect(getUserSpy).not.toHaveBeenCalled();
 
@@ -314,12 +326,17 @@ describe('HookService', () => {
       expect(geClientTokenSpy).toHaveBeenCalledWith(
         serviceAccountConfigMock.clientId,
         serviceAccountConfigMock.clientSecret,
+        Env.sandbox,
       );
       // and create a new user !!!
-      expect(createNewUserSpy).toHaveBeenCalledWith(`client-token-${process.pid}`, {
-        email: algoanCustomerService.getDefaultEmail(customerMock.id),
-        password: algoanCustomerService.getDefaultPassword(customerMock.id),
-      });
+      expect(createNewUserSpy).toHaveBeenCalledWith(
+        `client-token-${process.pid}`,
+        {
+          email: algoanCustomerService.getDefaultEmail(customerMock.id),
+          password: algoanCustomerService.getDefaultPassword(customerMock.id),
+        },
+        Env.sandbox,
+      );
 
       // then get a user token
       expect(getUserTokenSpy).toHaveBeenCalledWith(
@@ -327,6 +344,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         algoanCustomerService.getDefaultEmail(customerMock.id),
         algoanCustomerService.getDefaultPassword(customerMock.id),
+        Env.sandbox,
       );
 
       // to get a new iframe url
@@ -336,6 +354,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         serviceAccountConfigMock.connectionUrl,
         customerMock.aggregationDetails.callbackUrl,
+        Env.sandbox,
         expectedWidgetConfig,
       );
 
@@ -441,6 +460,7 @@ describe('HookService', () => {
         `user-token-${process.pid}`,
         bankDetailsRequiredMock.temporaryCode,
         serviceAccountConfigMock.finalConnectionTimeoutInMS,
+        Env.sandbox,
       );
 
       expect(updateAnalysisSpy).toHaveBeenCalledWith(
@@ -517,8 +537,9 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         algoanCustomerService.getDefaultEmail(customerMock.id),
         algoanCustomerService.getDefaultPassword(customerMock.id),
+        Env.sandbox,
       );
-      expect(getUserSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, `userId-${process.pid}`);
+      expect(getUserSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, `userId-${process.pid}`, Env.sandbox);
 
       // then get a user token
       expect(getUserTokenSpy).toHaveBeenCalledWith(
@@ -526,6 +547,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.clientSecret,
         algoanCustomerService.getDefaultEmail(customerMock.id),
         algoanCustomerService.getDefaultPassword(customerMock.id),
+        Env.sandbox,
       );
 
       // Start to get LinxoConnect data
@@ -534,19 +556,22 @@ describe('HookService', () => {
         `user-token-${process.pid}`,
         bankDetailsRequiredMock.temporaryCode,
         serviceAccountConfigMock.finalConnectionTimeoutInMS,
+        Env.sandbox,
       );
 
       // then accounts
       expect(getAllAccountsForConnectionSpy).toHaveBeenCalledWith(
         `user-token-${process.pid}`,
         linxoConnectConnectionMock.id,
+        Env.sandbox,
       );
 
       // and then transactions for all accounts
-      expect(getAllTransactionsForAllAccountsSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, [
-        linxoConnectAccountsMock[0].id,
-        linxoConnectAccountsMock[1].id,
-      ]);
+      expect(getAllTransactionsForAllAccountsSpy).toHaveBeenCalledWith(
+        `user-token-${process.pid}`,
+        [linxoConnectAccountsMock[0].id, linxoConnectAccountsMock[1].id],
+        Env.sandbox,
+      );
 
       // We can now update the analysis with linxo connect data
       expect(updateAnalysisSpy).toHaveBeenCalledWith(
@@ -560,7 +585,11 @@ describe('HookService', () => {
       );
 
       // And finally we can delete the user
-      expect(deleteUserTokenSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, linxoConnectUserMock.id);
+      expect(deleteUserTokenSpy).toHaveBeenCalledWith(
+        `user-token-${process.pid}`,
+        linxoConnectUserMock.id,
+        Env.sandbox,
+      );
     });
   });
 });

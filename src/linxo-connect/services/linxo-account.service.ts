@@ -11,6 +11,7 @@ import { CustomHttpService } from '../../shared/services/http.service';
 import { AccountArgs } from '../dto/account.args';
 import { TransactionArgs } from '../dto/transaction.args';
 import { LinxoConnectTransaction } from '../dto/transaction.object';
+import { Env } from '../dto/env.enums';
 
 /**
  * Service to manage account
@@ -27,6 +28,7 @@ export class LinxoConnectAccountService {
   public async getAllAccountsForConnection(
     userAccessToken: string,
     connectionId: string,
+    env: Env,
   ): Promise<LinxoConnectAccount[]> {
     const args: Omit<AccountArgs, 'page'> = {
       connection_id: connectionId,
@@ -38,7 +40,7 @@ export class LinxoConnectAccountService {
         LinxoConnectAccount[],
         AccountArgs
       >(
-        this.config.linxoConnect.apiBaseUrl,
+        this.config.linxoConnect[env].apiBaseUrl,
         `/accounts`,
         {
           ...args,
@@ -65,6 +67,7 @@ export class LinxoConnectAccountService {
   public async getAllTransactionsForAccount(
     userAccessToken: string,
     accountId: string,
+    env: Env,
   ): Promise<LinxoConnectTransaction[]> {
     const args: Omit<TransactionArgs, 'page'> = {
       account_id: accountId,
@@ -76,7 +79,7 @@ export class LinxoConnectAccountService {
         LinxoConnectTransaction[],
         TransactionArgs
       >(
-        this.config.linxoConnect.apiBaseUrl,
+        this.config.linxoConnect[env].apiBaseUrl,
         `/transactions`,
         {
           ...args,
@@ -101,10 +104,11 @@ export class LinxoConnectAccountService {
   public async getAllTransactionsForAllAccounts(
     userAccessToken: string,
     accountIds: string[],
+    env: Env,
   ): Promise<LinxoConnectTransaction[]> {
     const transactions: LinxoConnectTransaction[] = [];
     for (const accountId of accountIds) {
-      transactions.push(...(await this.getAllTransactionsForAccount(userAccessToken, accountId)));
+      transactions.push(...(await this.getAllTransactionsForAccount(userAccessToken, accountId, env)));
     }
 
     return transactions;

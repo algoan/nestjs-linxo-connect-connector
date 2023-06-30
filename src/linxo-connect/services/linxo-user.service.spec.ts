@@ -10,6 +10,7 @@ import { CreateUserInput } from '../dto/create-user.input';
 import { LinxoConnectUser } from '../dto/user.object';
 
 import { CustomHttpService } from '../../shared/services/http.service';
+import { Env } from '../dto/env.enums';
 import { LinxoConnectUserService } from './linxo-user.service';
 
 describe(LinxoConnectUserService.name, () => {
@@ -52,9 +53,14 @@ describe(LinxoConnectUserService.name, () => {
         .spyOn(customHttpService, 'get')
         .mockResolvedValue(Promise.resolve({ data: userMock } as unknown as AxiosResponse<undefined>));
 
-      const user: LinxoConnectUser = await linxoConnectUserService.getUser('token', userMock.id);
+      const user: LinxoConnectUser = await linxoConnectUserService.getUser('token', userMock.id, Env.sandbox);
 
-      expect(spy).toHaveBeenCalledWith(config.linxoConnect.apiBaseUrl, `/users/${userMock.id}`, undefined, 'token');
+      expect(spy).toHaveBeenCalledWith(
+        config.linxoConnect.sandbox.apiBaseUrl,
+        `/users/${userMock.id}`,
+        undefined,
+        'token',
+      );
       expect(user).toBe(userMock);
     });
   });
@@ -70,9 +76,9 @@ describe(LinxoConnectUserService.name, () => {
         email: 'toto',
         password: 'titi',
       };
-      const userId: string = await linxoConnectUserService.createNewUser('token', input);
+      const userId: string = await linxoConnectUserService.createNewUser('token', input, Env.sandbox);
 
-      expect(spy).toHaveBeenCalledWith(config.linxoConnect.apiBaseUrl, `/users`, input, 'token');
+      expect(spy).toHaveBeenCalledWith(config.linxoConnect.sandbox.apiBaseUrl, `/users`, input, 'token');
       expect(userId).toBe('1234');
     });
 
@@ -84,9 +90,9 @@ describe(LinxoConnectUserService.name, () => {
         email: 'toto',
         password: 'titi',
       };
-      await expect(linxoConnectUserService.createNewUser('token', input)).rejects.toThrowErrorMatchingInlineSnapshot(
-        '"Error while creating user"',
-      );
+      await expect(
+        linxoConnectUserService.createNewUser('token', input, Env.sandbox),
+      ).rejects.toThrowErrorMatchingInlineSnapshot('"Error while creating user"');
     });
   });
 
@@ -96,9 +102,14 @@ describe(LinxoConnectUserService.name, () => {
         .spyOn(customHttpService, 'delete')
         .mockResolvedValue(Promise.resolve({ data: {} } as unknown as AxiosResponse<undefined>));
 
-      await linxoConnectUserService.deleteUser('token', `id-${process.pid}`);
+      await linxoConnectUserService.deleteUser('token', `id-${process.pid}`, Env.sandbox);
 
-      expect(spy).toHaveBeenCalledWith(config.linxoConnect.apiBaseUrl, `/users/id-${process.pid}`, undefined, 'token');
+      expect(spy).toHaveBeenCalledWith(
+        config.linxoConnect.sandbox.apiBaseUrl,
+        `/users/id-${process.pid}`,
+        undefined,
+        'token',
+      );
     });
   });
 });

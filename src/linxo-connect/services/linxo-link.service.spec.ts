@@ -13,6 +13,7 @@ import { WidgetSessionUrlArgs } from '../dto/widget-session.args';
 import { WidgetSessionInput } from '../dto/widget-session.input';
 import { CustomHttpService } from '../../shared/services/http.service';
 import { WidgetConfig } from '../../algoan/dto/widget-config.objects';
+import { Env } from '../dto/env.enums';
 import { LinxoConnectLinkService } from './linxo-link.service';
 
 describe(LinxoConnectLinkService.name, () => {
@@ -88,10 +89,11 @@ describe(LinxoConnectLinkService.name, () => {
       `clientSecret-${process.pid}`,
       `connectionUrl-${process.pid}`,
       `callbackUrl-${process.pid}`,
+      Env.sandbox,
       widgetConfig,
     );
 
-    expect(spy).toHaveBeenCalledWith(config.linxoConnect.embedBaseUrl, '/widget/widget_session', input);
+    expect(spy).toHaveBeenCalledWith(config.linxoConnect.sandbox.embedBaseUrl, '/widget/widget_session', input);
     expect(link).toBe(`add_connection-${process.pid}&${qs.stringify(widgetSessionParams)}`);
   });
 });
