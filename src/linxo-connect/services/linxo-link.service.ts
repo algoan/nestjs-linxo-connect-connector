@@ -43,7 +43,7 @@ export class LinxoConnectLinkService {
     >(this.config.linxoConnect.embedBaseUrl, `/widget/widget_session`, input);
 
     const widgetSessionParams: WidgetSessionUrlArgs = {
-      redirect_uri: callbackUrl,
+      redirect_url: callbackUrl,
       aspsp_callback_uri: connectionUrl,
       consent_per_account: true,
       wait_sync_end: true,

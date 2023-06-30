@@ -59,7 +59,7 @@ describe(LinxoConnectLinkService.name, () => {
     };
 
     const widgetSessionParams: WidgetSessionUrlArgs = {
-      redirect_uri: `callbackUrl-${process.pid}`,
+      redirect_url: `callbackUrl-${process.pid}`,
       aspsp_callback_uri: `connectionUrl-${process.pid}`,
       consent_per_account: true,
       wait_sync_end: true,
