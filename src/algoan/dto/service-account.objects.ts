@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsPositive, IsString, ValidateNested } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsPositive, IsString, ValidateNested } from 'class-validator';
+import { Env } from '../../linxo-connect/dto/env.enums';
 import { WidgetConfig } from './widget-config.objects';
 
 /**
@@ -23,4 +24,8 @@ export class ClientConfig {
   @ValidateNested()
   @Type(() => WidgetConfig)
   public widgetConfig?: WidgetConfig;
+
+  @IsOptional()
+  @IsEnum(Env)
+  public env?: Env;
 }

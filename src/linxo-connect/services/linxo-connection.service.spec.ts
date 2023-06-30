@@ -11,6 +11,7 @@ import { CONFIG } from '../../config/config.module';
 import { CustomHttpService } from '../../shared/services/http.service';
 import { LinxoConnectConnection } from '../dto/connection.object';
 import { LinxoConnectConnectionStatus } from '../dto/connection.enums';
+import { Env } from '../dto/env.enums';
 import { LinxoConnectConnectionService } from './linxo-connection.service';
 
 describe(LinxoConnectConnectionService.name, () => {
@@ -61,10 +62,11 @@ describe(LinxoConnectConnectionService.name, () => {
       const connection: LinxoConnectConnection = await linxoConnectConnectionService.getConnection(
         'token',
         connectionMock.id,
+        Env.sandbox,
       );
 
       expect(spy).toHaveBeenCalledWith(
-        config.linxoConnect.apiBaseUrl,
+        config.linxoConnect.sandbox.apiBaseUrl,
         `/connections/${connectionMock.id}`,
         undefined,
         'token',
@@ -88,10 +90,11 @@ describe(LinxoConnectConnectionService.name, () => {
         'token',
         connectionMock.id,
         60_000,
+        Env.sandbox,
       );
 
       expect(spy).toBeCalledTimes(1);
-      expect(spy).toHaveBeenCalledWith('token', connectionMock.id);
+      expect(spy).toHaveBeenCalledWith('token', connectionMock.id, Env.sandbox);
       expect(connection).toBe(connectionMock);
     });
 
@@ -109,10 +112,11 @@ describe(LinxoConnectConnectionService.name, () => {
         'token',
         connectionMock.id,
         60_000,
+        Env.sandbox,
       );
 
       expect(spy).toBeCalledTimes(1);
-      expect(spy).toHaveBeenCalledWith('token', connectionMock.id);
+      expect(spy).toHaveBeenCalledWith('token', connectionMock.id, Env.sandbox);
       expect(connection).toBe(connectionMock);
     });
 
@@ -134,6 +138,7 @@ describe(LinxoConnectConnectionService.name, () => {
         'token',
         connectionMock.id,
         60_000,
+        Env.sandbox,
       );
 
       expect(spy).toBeCalledTimes(2);
@@ -151,7 +156,7 @@ describe(LinxoConnectConnectionService.name, () => {
         .mockResolvedValueOnce(connectionMock as unknown as LinxoConnectConnection);
 
       await expect(
-        linxoConnectConnectionService.getConnectionWithFinalStatus('token', connectionMock.id, 1000),
+        linxoConnectConnectionService.getConnectionWithFinalStatus('token', connectionMock.id, 1000, Env.sandbox),
       ).rejects.toThrowError('Connection final status take too long');
     });
   });

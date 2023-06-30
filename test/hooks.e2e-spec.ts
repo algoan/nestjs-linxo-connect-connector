@@ -103,7 +103,7 @@ describe('HooksController (e2e)', () => {
       });
 
       fakeAPI({
-        baseUrl: config.linxoConnect.authBaseUrl,
+        baseUrl: config.linxoConnect.sandbox.authBaseUrl,
         method: 'post',
         result: {
           access_token: 'new-token',
@@ -113,7 +113,7 @@ describe('HooksController (e2e)', () => {
       });
 
       fakeAPI({
-        baseUrl: config.linxoConnect.apiBaseUrl,
+        baseUrl: config.linxoConnect.sandbox.apiBaseUrl,
         method: 'post',
         result: {},
         responseHeaders: {
@@ -123,7 +123,7 @@ describe('HooksController (e2e)', () => {
       });
 
       fakeAPI({
-        baseUrl: config.linxoConnect.embedBaseUrl,
+        baseUrl: config.linxoConnect.sandbox.embedBaseUrl,
         method: 'post',
         result: {
           session_id: 'xxxxxxx',

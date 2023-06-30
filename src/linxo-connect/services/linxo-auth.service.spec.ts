@@ -14,6 +14,7 @@ import { AccessTokenInput } from '../dto/access-token.input';
 import { AuthProviders, GrantType } from '../dto/grant-type.enum';
 
 import { AccessTokenObject } from '../dto/access-token.object';
+import { Env } from '../dto/env.enums';
 import { LinxoConnectAuthService } from './linxo-auth.service';
 
 describe(LinxoConnectAuthService.name, () => {
@@ -56,7 +57,7 @@ describe(LinxoConnectAuthService.name, () => {
     });
 
     it('should request a client token', async () => {
-      const url: string = `${config.linxoConnect.authBaseUrl}`;
+      const url: string = `${config.linxoConnect.sandbox.authBaseUrl}`;
       const input: AccessTokenInput = {
         provider: AuthProviders.LINXO_CONNECT,
         client_id: serviceAccountConfigMock.clientId,
@@ -68,6 +69,7 @@ describe(LinxoConnectAuthService.name, () => {
       const token: string = await linxoConnectAuthService.geClientToken(
         serviceAccountConfigMock.clientId,
         serviceAccountConfigMock.clientSecret,
+        Env.sandbox,
       );
 
       expect(spy).toHaveBeenCalledWith(url, '/token', input);
@@ -85,7 +87,7 @@ describe(LinxoConnectAuthService.name, () => {
     });
 
     it('should request a user token', async () => {
-      const url: string = `${config.linxoConnect.authBaseUrl}`;
+      const url: string = `${config.linxoConnect.sandbox.authBaseUrl}`;
       const input: AccessTokenInput = {
         provider: AuthProviders.LINXO_CONNECT,
         client_id: serviceAccountConfigMock.clientId,
@@ -102,6 +104,7 @@ describe(LinxoConnectAuthService.name, () => {
         serviceAccountConfigMock.clientSecret,
         'email@algoan.com',
         'thisIsAStringPassword',
+        Env.sandbox,
       );
 
       expect(spy).toHaveBeenCalledWith(url, '/token', input);

@@ -23,6 +23,7 @@ import { AggregatorLinkRequiredDTO } from '../dto/aggregator-link-required-paylo
 import { BankDetailsRequiredDTO } from '../dto/bank-details-required-payload.dto';
 import { mapLinxoConnectDataToAlgoanAnalysis, mapLinxoConnectErrorToAlgoanAnalysis } from '../mappers/analysis.mapper';
 import { WidgetConfig } from '../../algoan/dto/widget-config.objects';
+import { Env } from '../../linxo-connect/dto/env.enums';
 
 /**
  * Hook service
@@ -59,6 +60,7 @@ export class HooksService {
     // Ignore query params since LinxoConnect does not accept variables
     const callbackUrl: string | undefined = customer.aggregationDetails.callbackUrl?.split(/[?#]/)[0];
     const clientConfig: ClientConfig | undefined = this.serviceAccount.config as ClientConfig | undefined;
+    const env: Env = clientConfig?.env ?? Env.sandbox;
 
     // Validate config
     if (callbackUrl === undefined || clientConfig === undefined) {
@@ -82,8 +84,9 @@ export class HooksService {
           clientConfig.clientSecret,
           this.algoanCustomerService.getDefaultEmail(customer.id),
           this.algoanCustomerService.getDefaultPassword(customer.id),
+          env,
         );
-        await this.linxoConnectUserService.getUser(userAccessToken, linxoConnectUserId);
+        await this.linxoConnectUserService.getUser(userAccessToken, linxoConnectUserId, env);
       } catch (e) {
         // the user doesn't exist anymore
         userAccessToken = undefined;
@@ -97,12 +100,17 @@ export class HooksService {
       const clientAccessToken: string = await this.linxoConnectAuthService.geClientToken(
         clientConfig.clientId,
         clientConfig.clientSecret,
+        env,
       );
 
-      linxoConnectUserId = await this.linxoConnectUserService.createNewUser(clientAccessToken, {
-        email: this.algoanCustomerService.getDefaultEmail(customer.id),
-        password: this.algoanCustomerService.getDefaultPassword(customer.id),
-      });
+      linxoConnectUserId = await this.linxoConnectUserService.createNewUser(
+        clientAccessToken,
+        {
+          email: this.algoanCustomerService.getDefaultEmail(customer.id),
+          password: this.algoanCustomerService.getDefaultPassword(customer.id),
+        },
+        env,
+      );
 
       // Get user token
       userAccessToken = await this.linxoConnectAuthService.getUserToken(
@@ -110,6 +118,7 @@ export class HooksService {
         clientConfig.clientSecret,
         this.algoanCustomerService.getDefaultEmail(customer.id),
         this.algoanCustomerService.getDefaultPassword(customer.id),
+        env,
       );
     }
 
@@ -120,6 +129,7 @@ export class HooksService {
       clientConfig.clientSecret,
       clientConfig.connectionUrl,
       callbackUrl,
+      env,
       clientConfig.widgetConfig,
     );
 
@@ -152,6 +162,7 @@ export class HooksService {
 
       // Get client config
       const clientConfig: ClientConfig | undefined = this.serviceAccount.config as ClientConfig | undefined;
+      const env: Env = clientConfig?.env ?? Env.sandbox;
 
       // Validate config
       if (clientConfig === undefined) {
@@ -171,15 +182,17 @@ export class HooksService {
         clientConfig.clientSecret,
         this.algoanCustomerService.getDefaultEmail(customer.id),
         this.algoanCustomerService.getDefaultPassword(customer.id),
+        env,
       );
       // test if the user exist
-      await this.linxoConnectUserService.getUser(userAccessToken, linxoConnectUserId);
+      await this.linxoConnectUserService.getUser(userAccessToken, linxoConnectUserId, env);
 
       // Get the connection with the final status
       const connection: LinxoConnectConnection = await this.linxoConnectConnectionService.getConnectionWithFinalStatus(
         userAccessToken,
         payload.temporaryCode,
         clientConfig.finalConnectionTimeoutInMS,
+        env,
       );
 
       // Check if we NOT get a valid status
@@ -200,6 +213,7 @@ export class HooksService {
       const accounts: LinxoConnectAccount[] = await this.linxoConnectAccountService.getAllAccountsForConnection(
         userAccessToken,
         connection.id,
+        env,
       );
 
       // Get All transactions for all accounts
@@ -207,6 +221,7 @@ export class HooksService {
         await this.linxoConnectAccountService.getAllTransactionsForAllAccounts(
           userAccessToken,
           accounts.map((account: LinxoConnectAccount) => account.id),
+          env,
         );
 
       // Log duration
@@ -225,7 +240,7 @@ export class HooksService {
       );
 
       // And finally we can delete the user
-      await this.linxoConnectUserService.deleteUser(userAccessToken, linxoConnectUserId);
+      await this.linxoConnectUserService.deleteUser(userAccessToken, linxoConnectUserId, env);
     } catch (err) {
       // Update the analysis error
       await this.algoanAnalysisService.updateAnalysis(

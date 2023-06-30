@@ -5,9 +5,16 @@
     "clientSecret": "b"
   },
   "linxoConnect": {
-    "authBaseUrl": "https://sandbox-auth.oxlin.io",
-    "apiBaseUrl": "https://sandbox-api.oxlin.io/v2.1",
-    "embedBaseUrl": "https://sandbox-embed.oxlin.io/v2.1",
+    "sandbox": {
+      "authBaseUrl": "https://sandbox-auth.oxlin.io",
+      "apiBaseUrl": "https://sandbox-api.oxlin.io/v2.1",
+      "embedBaseUrl": "https://sandbox-embed.oxlin.io/v2.1"
+    },
+    "production": {
+      "authBaseUrl": "https://auth.oxlin.io",
+      "apiBaseUrl": "https://api.oxlin.io/v2.1",
+      "embedBaseUrl": "https://embed.oxlin.io/v2.1"
+    },
     "test": true
   },
   "targetUrl": "https://test",

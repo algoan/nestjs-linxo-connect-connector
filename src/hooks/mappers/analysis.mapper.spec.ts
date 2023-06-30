@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention,camelcase */
 
 import { LinxoConnectAccountApiV2AnalysisUpdateInput } from 'src/algoan/dto/analysis.inputs';
-import { LinxoConnectConnection } from 'src/linxo-connect/dto/connection.object';
+import { LinxoConnectConnection } from '../../linxo-connect/dto/connection.object';
 import { linxoConnectAccountsMock } from '../../linxo-connect/dto/account.object.mock';
 import { linxoConnectTransactionsMock } from '../../linxo-connect/dto/transaction.object.mock';
 import { linxoConnectConnectionMock } from '../../linxo-connect/dto/connection.object.mock';
