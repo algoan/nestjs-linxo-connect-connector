@@ -55,6 +55,7 @@
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.3",
     "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin-tslint": "^5.60.1",
     "commitlint": "^17.6.6",
     "concurrently": "^8.2.0",
     "cz-conventional-changelog": "^3.3.0",
