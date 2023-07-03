@@ -73,22 +73,37 @@ export class HooksController {
 
         // The default case should never be reached, as the eventName is already checked in the DTO
         default:
-          void se.update({ status: EventStatus.FAILED }).catch((e: Error) => {
-            this.logger.error('An error occurred when updating event', e.stack);
-          });
+          void se
+            .update({ status: EventStatus.FAILED })
+            .catch((e: Error) => {
+              this.logger.error('An error occurred when updating event', e.stack);
+            })
+            .catch((e: Error) => {
+              this.logger.error('An error occurred when updating the subscription status', e.stack);
+            });
 
           return;
       }
     } catch (err) {
-      void se.update({ status: EventStatus.ERROR }).catch((e: Error) => {
-        this.logger.error('An error occurred when updating event', e.stack);
-      });
+      void se
+        .update({ status: EventStatus.ERROR })
+        .catch((e: Error) => {
+          this.logger.error('An error occurred when updating event', e.stack);
+        })
+        .catch((e: Error) => {
+          this.logger.error('An error occurred when updating the subscription status', e.stack);
+        });
 
       throw err;
     }
 
-    void se.update({ status: EventStatus.PROCESSED }).catch((e: Error) => {
-      this.logger.error('An error occurred when updating event', e.stack);
-    });
+    void se
+      .update({ status: EventStatus.PROCESSED })
+      .catch((e: Error) => {
+        this.logger.error('An error occurred when updating event', e.stack);
+      })
+      .catch((e: Error) => {
+        this.logger.error('An error occurred when updating the subscription status', e.stack);
+      });
   }
 }
