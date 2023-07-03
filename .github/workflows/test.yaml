@@ -65,7 +65,7 @@ jobs:
       # Set up google credentials
       - uses: google-github-actions/auth@v1
         with:
-          credentials_json: ${{ secrets.GCLOUD_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_PUBLIC_SA }}
       # Configure Docker to use the gcloud command-line tool as a credential
       # helper for authentication
       - run: gcloud auth configure-docker europe-docker.pkg.dev
