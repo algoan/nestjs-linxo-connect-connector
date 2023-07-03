@@ -49,9 +49,9 @@ jobs:
       # Run functional tests with coverage
       - run: npm run test:e2e:cov
 
-  deploy:
+  publish:
     runs-on: ubuntu-latest
-    name: Deploy the docker image to GCP
+    name: Push the docker image to dockerhub
     needs: test_workflow
     if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'workflow_dispatch' }}
     steps:
@@ -62,15 +62,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      # Set up google credentials
-      - uses: google-github-actions/setup-gcloud@v0
-        with:
-          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCLOUD_SA_KEY }}
-      # Configure Docker to use the gcloud command-line tool as a credential
-      # helper for authentication
-      - run: gcloud auth configure-docker europe-docker.pkg.dev
-      - run: npm install
+      # Install dependencies
+      - run: npm ci --prefer-offline
       - run: npx semantic-release
         env:
+          DOCKER_REGISTRY_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_GHA_PAT }}
