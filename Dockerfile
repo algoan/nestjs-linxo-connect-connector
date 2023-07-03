@@ -1,7 +1,7 @@
 # ---------------
 # Pull node image as Builder. we will transpile Ts files to Js here
 # ---------------
-FROM node:fermium-alpine as builder
+FROM node:18.16.0-alpine as builder
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -19,7 +19,7 @@ RUN npm run build
 # ---------------
 # Multistage docker. This will be the final image
 # ---------------
-FROM node:fermium-alpine
+FROM node:18.16.0-alpine
 
 WORKDIR /usr/src/app
 
