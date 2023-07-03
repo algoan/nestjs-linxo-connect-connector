@@ -8,6 +8,10 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     name: {{ include "..name" . }}
+  {{- with .Values.deployment.annotations }}
+  annotations:
+  {{ toYaml . | indent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
