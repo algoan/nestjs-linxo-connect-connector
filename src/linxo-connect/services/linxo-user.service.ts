@@ -21,6 +21,7 @@ export class LinxoConnectUserService {
    */
   public async getUser(userAccessToken: string, userId: string, env: Env): Promise<LinxoConnectUser> {
     const response: AxiosResponse<LinxoConnectUser> = await this.customHttpService.get<LinxoConnectUser>(
+      // eslint-disable-next-line @typescript-eslint/tslint/config
       this.config.linxoConnect[env].apiBaseUrl,
       `/users/${userId}`,
       undefined,
@@ -35,6 +36,7 @@ export class LinxoConnectUserService {
    */
   public async createNewUser(clientAccessToken: string, input: CreateUserInput, env: Env): Promise<string> {
     const response: AxiosResponse<undefined> = await this.customHttpService.post<undefined, CreateUserInput>(
+      // eslint-disable-next-line @typescript-eslint/tslint/config
       this.config.linxoConnect[env].apiBaseUrl,
       '/users',
       input,
@@ -42,6 +44,7 @@ export class LinxoConnectUserService {
     );
 
     const lastItem: number = -1;
+    // eslint-disable-next-line @typescript-eslint/tslint/config
     const userId: string | undefined = response.headers.location?.split('/').slice(lastItem).pop();
 
     if (userId === undefined) {
@@ -56,6 +59,7 @@ export class LinxoConnectUserService {
    */
   public async deleteUser(userAccessToken: string, userId: string, env: Env): Promise<void> {
     await this.customHttpService.delete<void>(
+      // eslint-disable-next-line @typescript-eslint/tslint/config
       this.config.linxoConnect[env].apiBaseUrl,
       `/users/${userId}`,
       undefined,

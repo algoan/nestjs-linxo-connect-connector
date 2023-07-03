@@ -1,6 +1,6 @@
 import { LoggingInterceptor } from '@algoan/nestjs-logging-interceptor';
 import { HttpModule, HttpService } from '@nestjs/axios';
-import type { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
+import type { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { Inject, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Config } from 'node-config-ts';
@@ -38,16 +38,18 @@ export class AppModule implements OnModuleInit {
   public onModuleInit(): void {
     const logger: Logger = new Logger(HttpService.name);
 
-    this.httpService.axiosRef.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig => {
-      if (this.config.enableHttpRequestLog) {
-        logger.log({
-          config,
-          message: `${config.method} ${config.url}`,
-        });
-      }
+    this.httpService.axiosRef.interceptors.request.use(
+      (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+        if (this.config.enableHttpRequestLog) {
+          logger.log({
+            config,
+            message: `${config.method} ${config.url}`,
+          });
+        }
 
-      return config;
-    });
+        return config;
+      },
+    );
     this.httpService.axiosRef.interceptors.response.use(
       async (response: AxiosResponse) => {
         if (this.config.enableHttpRequestLog) {
