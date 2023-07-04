@@ -42,7 +42,7 @@ spec:
               topologyKey: failure-domain.beta.kubernetes.io/zone
             weight: 100
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "..name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           readinessProbe:
