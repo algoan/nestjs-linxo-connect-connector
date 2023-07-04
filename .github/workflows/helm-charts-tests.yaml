@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - '.helm/**'
+      - '.github/chart-testing.yml'
   pull_request:
     paths:
       - '.helm/**'
+      - '.github/chart-testing.yml'
     branches-ignore:
       - gh-pages
 

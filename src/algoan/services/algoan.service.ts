@@ -26,6 +26,10 @@ export class AlgoanService implements OnModuleInit {
     const defaultLevel: string = process.env.DEBUG_LEVEL ?? 'info';
     const nodeEnv: string | undefined = process.env.NODE_ENV;
 
+    if (process.env.DISABLE_ALGOAN_MODULE === 'true') {
+      return;
+    }
+
     /**
      * Retrieve service accounts and get/create subscriptions
      */
