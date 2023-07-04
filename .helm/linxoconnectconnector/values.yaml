@@ -8,6 +8,9 @@ replicaCount: 1
 
 terminationGracePeriodSeconds: 60
 
+deployment:
+  annotations: {}
+
 image:
   repository: europe-docker.pkg.dev/algoan-prod/linxo-connect-connector/images
   tag: latest

@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - '.helm/**'
+      - '.github/chart-testing.yml'
   pull_request:
     paths:
       - '.helm/**'
+      - '.github/chart-testing.yml'
     branches-ignore:
       - gh-pages
 
@@ -106,10 +108,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       # Set up google credentials
-      - uses: google-github-actions/setup-gcloud@v0
+      - uses: google-github-actions/auth@v1
         with:
-          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCLOUD_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_PUBLIC_SA }}
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:

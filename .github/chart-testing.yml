@@ -1,4 +1,4 @@
-helm-extra-args: --timeout 600s
+helm-extra-args: --timeout 600s --set-string environmentVariables.DISABLE_ALGOAN_MODULE=true
 check-version-increment: false
 debug: true
 chart-dirs: .helm
