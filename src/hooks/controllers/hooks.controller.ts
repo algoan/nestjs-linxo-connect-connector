@@ -79,7 +79,10 @@ export class HooksController {
               this.logger.error('An error occurred when updating event', e.stack);
             })
             .catch((e: Error) => {
-              this.logger.error('An error occurred when updating the subscription status', e.stack);
+              this.logger.error(
+                `An error occurred when updating the subscription status. eventId: ${se.eventId}`,
+                e.stack,
+              );
             });
 
           return;
@@ -91,7 +94,7 @@ export class HooksController {
           this.logger.error('An error occurred when updating event', e.stack);
         })
         .catch((e: Error) => {
-          this.logger.error('An error occurred when updating the subscription status', e.stack);
+          this.logger.error(`An error occurred when updating the subscription status. eventId: ${se.eventId}`, e.stack);
         });
 
       throw err;
@@ -103,7 +106,7 @@ export class HooksController {
         this.logger.error('An error occurred when updating event', e.stack);
       })
       .catch((e: Error) => {
-        this.logger.error('An error occurred when updating the subscription status', e.stack);
+        this.logger.error(`An error occurred when updating the subscription status. eventId: ${se.eventId}`, e.stack);
       });
   }
 }
