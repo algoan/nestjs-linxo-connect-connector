@@ -68,6 +68,7 @@ describe(LinxoConnectLinkService.name, () => {
       font: 'Arial',
       font_color: 'Blue',
       elements_color: 'Yellow',
+      select_accounts: true,
     };
 
     const widgetConfig: WidgetConfig = {
