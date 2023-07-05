@@ -12,4 +12,5 @@ export interface WidgetSessionUrlArgs {
   font?: string;
   font_color?: string;
   elements_color?: string;
+  select_accounts?: boolean;
 }
