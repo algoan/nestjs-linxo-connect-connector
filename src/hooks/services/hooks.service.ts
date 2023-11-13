@@ -130,6 +130,7 @@ export class HooksService {
       clientConfig.connectionUrl,
       callbackUrl,
       env,
+      customer.customIdentifier,
       clientConfig.widgetConfig,
     );
 

@@ -223,6 +223,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.connectionUrl,
         customerMock.aggregationDetails.callbackUrl,
         Env.sandbox,
+        customerMock.customIdentifier,
         expectedWidgetConfig,
       );
 
@@ -281,6 +282,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.connectionUrl,
         customerMock.aggregationDetails.callbackUrl,
         Env.sandbox,
+        customerMock.customIdentifier,
         expectedWidgetConfig,
       );
 
@@ -355,6 +357,7 @@ describe('HookService', () => {
         serviceAccountConfigMock.connectionUrl,
         customerMock.aggregationDetails.callbackUrl,
         Env.sandbox,
+        customerMock.customIdentifier,
         expectedWidgetConfig,
       );
 
