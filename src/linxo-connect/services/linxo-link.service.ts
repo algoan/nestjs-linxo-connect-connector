@@ -31,6 +31,7 @@ export class LinxoConnectLinkService {
     connectionUrl: string,
     callbackUrl: string,
     env: Env,
+    customIdentifier: string,
     widgetConfig?: WidgetConfig,
   ): Promise<string> {
     const input: WidgetSessionInput = {
@@ -46,7 +47,7 @@ export class LinxoConnectLinkService {
 
     const widgetSessionParams: WidgetSessionUrlArgs = {
       redirect_url: callbackUrl,
-      aspsp_callback_uri: connectionUrl,
+      aspsp_callback_uri: `${connectionUrl}?customIdentifier=${customIdentifier}`,
       consent_per_account: true,
       wait_sync_end: true,
       locale: widgetConfig?.iframe?.locale,
