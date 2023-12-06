@@ -86,7 +86,6 @@ export class HooksService {
           this.algoanCustomerService.getDefaultPassword(customer.id),
           env,
         );
-        await this.linxoConnectUserService.getUser(userAccessToken, linxoConnectUserId, env);
       } catch (e) {
         // the user doesn't exist anymore
         userAccessToken = undefined;
