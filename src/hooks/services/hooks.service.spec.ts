@@ -131,7 +131,6 @@ describe('HookService', () => {
     let updateCustomerSpy: jest.SpyInstance;
     let getIframeUrlSpy: jest.SpyInstance;
     let getCustomerByIdSpy: jest.SpyInstance;
-    let getUserSpy: jest.SpyInstance;
     let createNewUserSpy: jest.SpyInstance;
 
     const expectedWidgetConfig = {
@@ -153,7 +152,6 @@ describe('HookService', () => {
       getUserTokenSpy = jest
         .spyOn(linxoConnectAuthService, 'getUserToken')
         .mockResolvedValue(`user-token-${process.pid}`);
-      getUserSpy = jest.spyOn(linxoConnectUserService, 'getUser').mockResolvedValue(linxoConnectUserMock);
       createNewUserSpy = jest.spyOn(linxoConnectUserService, 'createNewUser').mockResolvedValue(`id-${process.pid}`);
       getIframeUrlSpy = jest.spyOn(linxoConnectLinkService, 'getIframeUrl').mockResolvedValue('MY_LINK_URL');
     });
@@ -186,9 +184,6 @@ describe('HookService', () => {
       // get algoan customer
       expect(algoanAuthenticateSpy).toHaveBeenCalled();
       expect(getCustomerByIdSpy).toHaveBeenCalledWith(aggregatorLinkRequiredMock.customerId);
-
-      // Should not to get the existing user
-      expect(getUserSpy).not.toHaveBeenCalled();
 
       // get a linxo connect client token
       expect(geClientTokenSpy).toHaveBeenCalledWith(
@@ -258,7 +253,6 @@ describe('HookService', () => {
         algoanCustomerService.getDefaultPassword(customerMock.id),
         Env.sandbox,
       );
-      expect(getUserSpy).toHaveBeenCalledWith(`user-token-${process.pid}`, `id-${process.pid}`, Env.sandbox);
 
       // DO NOT get a linxo connect client token
       expect(geClientTokenSpy).not.toHaveBeenCalled();
@@ -320,8 +314,6 @@ describe('HookService', () => {
         algoanCustomerService.getDefaultPassword(customerMock.id),
         Env.sandbox,
       );
-      expect(getUserSpy).not.toHaveBeenCalled();
-
       // BUT there is an error
 
       // SO Connect to linxo connect as client
