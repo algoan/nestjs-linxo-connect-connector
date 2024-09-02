@@ -24,6 +24,9 @@ import { BankDetailsRequiredDTO } from '../dto/bank-details-required-payload.dto
 import { mapLinxoConnectDataToAlgoanAnalysis, mapLinxoConnectErrorToAlgoanAnalysis } from '../mappers/analysis.mapper';
 import { WidgetConfig } from '../../algoan/dto/widget-config.objects';
 import { Env } from '../../linxo-connect/dto/env.enums';
+import { AlgoanService } from '../../algoan/services/algoan.service';
+import { ServiceAccountUpdatedDTO } from '../dto/service-account-updated.dto';
+import { ServiceAccountCreatedDTO } from '../dto/service-account-created.dto';
 
 /**
  * Hook service
@@ -39,6 +42,7 @@ export class HooksService {
     private readonly algoanHttpService: AlgoanHttpService,
     private readonly algoanCustomerService: AlgoanCustomerService,
     private readonly algoanAnalysisService: AlgoanAnalysisService,
+    private readonly algoanService: AlgoanService,
     private readonly serviceAccount: ServiceAccount,
     private readonly linxoConnectAuthService: LinxoConnectAuthService,
     private readonly linxoConnectUserService: LinxoConnectUserService,
@@ -251,5 +255,22 @@ export class HooksService {
 
       throw err;
     }
+  }
+
+  /**
+   * Handles the service_account_created event
+   * @param payload the new service account id
+   * @param subscription
+   */
+  public async handleServiceAccountCreatedEvent(payload: ServiceAccountCreatedDTO) {
+    await this.algoanService.saveServiceAccount(payload);
+  }
+
+  /**
+   * Handles the service_account_updated event
+   * @param payload service account update dto
+   */
+  public async handleServiceAccountUpdatedEvent(payload: ServiceAccountUpdatedDTO) {
+    await this.algoanService.updateServiceAccount(payload);
   }
 }
