@@ -1,8 +1,8 @@
 /* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/naming-convention,camelcase */
 import {
-  Algoan,
   IServiceAccount,
+  ISubscription,
   ISubscriptionEvent,
   RequestBuilder,
   ServiceAccount,
@@ -43,6 +43,7 @@ import { subscriptionMock } from '../dto/subscription.dto.mock';
 import { bankDetailsRequiredMock } from '../dto/bank-details-required-payload.dto.mock';
 import { mapLinxoConnectDataToAlgoanAnalysis } from '../mappers/analysis.mapper';
 import { Env } from '../../linxo-connect/dto/env.enums';
+import { AlgoanServiceAcountService } from '../../algoan/services/algoan-service-account.service';
 import { HooksService } from './hooks.service';
 
 describe('HookService', () => {
@@ -51,6 +52,7 @@ describe('HookService', () => {
   let algoanHttpService: AlgoanHttpService;
   let algoanCustomerService: AlgoanCustomerService;
   let algoanAnalysisService: AlgoanAnalysisService;
+  let algoanServiceAcountService: AlgoanServiceAcountService;
   let linxoConnectLinkService: LinxoConnectLinkService;
   let linxoConnectUserService: LinxoConnectUserService;
   let linxoConnectAuthService: LinxoConnectAuthService;
@@ -90,6 +92,10 @@ describe('HookService', () => {
 
     hookService = await moduleRef.resolve<HooksService>(HooksService, contextId);
     algoanService = await moduleRef.resolve<AlgoanService>(AlgoanService, contextId);
+    algoanServiceAcountService = await moduleRef.resolve<AlgoanServiceAcountService>(
+      AlgoanServiceAcountService,
+      contextId,
+    );
     algoanHttpService = await moduleRef.resolve<AlgoanHttpService>(AlgoanHttpService, contextId);
     algoanCustomerService = await moduleRef.resolve<AlgoanCustomerService>(AlgoanCustomerService, contextId);
     algoanAnalysisService = await moduleRef.resolve<AlgoanAnalysisService>(AlgoanAnalysisService, contextId);
@@ -106,7 +112,7 @@ describe('HookService', () => {
     );
     serviceAccount = await moduleRef.resolve<ServiceAccount>(ServiceAccount, contextId);
 
-    jest.spyOn(Algoan.prototype, 'initRestHooks').mockResolvedValue();
+    jest.spyOn(AlgoanService.prototype, 'initRestHooks').mockResolvedValue();
 
     await algoanService.onModuleInit();
 
@@ -116,7 +122,10 @@ describe('HookService', () => {
     jest.spyOn(algoanService.algoanClient, 'getServiceAccountBySubscriptionId').mockReturnValue(serviceAccount);
 
     serviceAccount.subscriptions = [
-      new Subscription(subscriptionMock, new RequestBuilder('mockBaseURL', { clientId: 'mockClientId' })),
+      new Subscription(
+        subscriptionMock as unknown as ISubscription,
+        new RequestBuilder('mockBaseURL', { clientId: 'mockClientId' }),
+      ),
     ];
   });
 
@@ -584,6 +593,55 @@ describe('HookService', () => {
         `user-token-${process.pid}`,
         linxoConnectUserMock.id,
         Env.sandbox,
+      );
+    });
+  });
+
+  describe('Func handleServiceAccountUpdatedEvent()', () => {
+    it('should update service account config', async () => {
+      const findServiceAccountSpy = jest.spyOn(algoanServiceAcountService, 'findById').mockResolvedValue({
+        clientId: 'clientId',
+        config: {
+          test: true,
+        },
+      } as ServiceAccount);
+
+      await hookService.handleServiceAccountUpdatedEvent({
+        serviceAccountId: 'id',
+      });
+
+      expect(findServiceAccountSpy).toBeCalled();
+    });
+  });
+
+  describe('Func handleServiceAccountCreatedEvent()', () => {
+    it('should update service account list and create subscriptions', async () => {
+      const findServiceAccountSpy = jest.spyOn(algoanServiceAcountService, 'findById').mockResolvedValue(
+        new ServiceAccount('url', {
+          id: 'id',
+          clientId: 'clientId',
+          clientSecret: 'secret',
+          createdAt: new Date().toISOString(),
+        }),
+      );
+
+      const getOrCreateSubscriptionsSpy = jest
+        .spyOn(ServiceAccount.prototype, 'getOrCreateSubscriptions')
+        .mockResolvedValue([]);
+
+      await hookService.handleServiceAccountCreatedEvent({
+        serviceAccountId: 'id',
+      });
+
+      expect(findServiceAccountSpy).toBeCalled();
+      expect(getOrCreateSubscriptionsSpy).toBeCalledWith(
+        [
+          { eventName: 'aggregator_link_required', secret: 'a', target: 'https://test' },
+          { eventName: 'bank_details_required', secret: 'a', target: 'https://test' },
+          { eventName: 'service_account_updated', secret: 'a', target: 'https://test' },
+          { eventName: 'service_account_created', secret: 'a', target: 'https://test' },
+        ],
+        ['aggregator_link_required', 'bank_details_required', 'service_account_updated', 'service_account_created'],
       );
     });
   });

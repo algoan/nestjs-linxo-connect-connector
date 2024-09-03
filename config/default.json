@@ -2,7 +2,8 @@
   "algoan": {
     "baseUrl": "http://localhost:4000",
     "clientId": "a",
-    "clientSecret": "b"
+    "clientSecret": "b",
+    "version": 2
   },
   "linxoConnect": {
     "sandbox": {
@@ -20,7 +21,9 @@
   "targetUrl": "https://test",
   "eventList": [
     "aggregator_link_required",
-    "bank_details_required"
+    "bank_details_required",
+    "service_account_updated",
+    "service_account_created"
   ],
   "restHooksSecret": "a",
   "customerIdPassword": "toto",

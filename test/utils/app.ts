@@ -32,26 +32,28 @@ export const buildFakeApp = async (): Promise<INestApplication> => {
       expires_in: 3000,
       refresh_expires_in: 10000,
     },
-    path: '/v1/oauth/token',
+    path: '/v2/oauth/token',
     nbOfCalls: 2,
   });
   const fakeServiceAccounts: nock.Scope = fakeAPI({
     baseUrl: fakeAlgoanBaseUrl,
     method: 'get',
-    result: [
-      {
-        clientId: 'client1',
-        clientSecret: 'secret',
-        id: 'id1',
-        config: {
-          clientId: 'linxoConnectclientId',
-          clientSecret: 'linxoConnectClientSecret',
-          connectionUrl: 'http://localhost:4000',
-          finalConnectionTimeoutInMS: 10000,
+    result: {
+      resources: [
+        {
+          clientId: 'client1',
+          clientSecret: 'secret',
+          id: 'id1',
+          config: {
+            clientId: 'linxoConnectclientId',
+            clientSecret: 'linxoConnectClientSecret',
+            connectionUrl: 'http://localhost:4000',
+            finalConnectionTimeoutInMS: 10000,
+          },
         },
-      },
-    ],
-    path: '/v1/service-accounts',
+      ],
+    },
+    path: '/v2/service-accounts?limit=1000',
   });
   const fakeGetSubscriptions: nock.Scope = fakeAPI({
     baseUrl: fakeAlgoanBaseUrl,
@@ -75,6 +77,20 @@ export const buildFakeApp = async (): Promise<INestApplication> => {
     path: '/v1/subscriptions',
   });
 
+  const fakePostSubscriptions3: nock.Scope = fakeAPI({
+    baseUrl: fakeAlgoanBaseUrl,
+    method: 'post',
+    result: { id: '1', eventName: 'service_account_created', target: 'http://...' },
+    path: '/v1/subscriptions',
+  });
+
+  const fakePostSubscriptions4: nock.Scope = fakeAPI({
+    baseUrl: fakeAlgoanBaseUrl,
+    method: 'post',
+    result: { id: '1', eventName: 'service_account_updated', target: 'http://...' },
+    path: '/v1/subscriptions',
+  });
+
   /**
    * Attach global dependencies
    */
@@ -95,6 +111,8 @@ export const buildFakeApp = async (): Promise<INestApplication> => {
   assert.strictEqual(fakeGetSubscriptions.isDone(), true);
   assert.strictEqual(fakePostSubscriptions1.isDone(), true);
   assert.strictEqual(fakePostSubscriptions2.isDone(), true);
+  assert.strictEqual(fakePostSubscriptions3.isDone(), true);
+  assert.strictEqual(fakePostSubscriptions4.isDone(), true);
 
   return app;
 };

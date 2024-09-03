@@ -68,7 +68,7 @@ describe('HooksController (e2e)', () => {
           expires_in: 3000,
           refresh_expires_in: 10000,
         },
-        path: '/v1/oauth/token',
+        path: '/v2/oauth/token',
       });
 
       fakeAPI({
